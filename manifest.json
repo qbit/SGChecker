@@ -1,0 +1,15 @@
+{
+   "background_page": "background.html",
+   "browser_action": {
+      "default_title": ""
+   },
+   "description": "Shows your SG message count",
+   "icons": {
+      "128": "icon_128.png"
+   },
+   "name": "SuicideGirls Checker",
+   "options_page": "options.html",
+   "permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*" ],
+   "update_url": "http://deftly.net/storage/sgchecker/update.xml",
+   "version": "2.0"
+}

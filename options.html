@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>SGChecker Options</title>
+	<script src="SGChecker.js" type="text/javascript"></script>
+	<link href="SGChecker.css" rel="stylesheet" type="text/css">
+	<script>
+		window.onload = function() {
+			console.log( localStorage );
+			SGChecker.pref_init();
+		}
+		function delete_store() {
+			delete localStorage.comments;
+			delete localStorage.messages;
+			delete localStorage.debug;
+			delete localStorage.url_action;
+		}
+	</script>
+</head>
+<body>
+	<div id="sg_save_status" class="status">Saved..</div>
+
+	<div id="header"><h1>SuicideGirls Checker Options</h1></div>
+
+	<div class="section-header first">Default Click Action</div>
+		<p>This determines the default location SGChecker will load when you click its icon.
+		<p>
+			<div id="sg_click_action_div">
+			</div>
+	<div class="section-header first">Get Options</div>
+		<p>Select what you would prefer to display; message count or comment count.
+		<p>
+			<div id="sg_get_options_div">
+			</div>
+	<div class="section-header first">Development Options</div>
+			<div id="sg_debug_options_div">
+				Enable debug: 
+			</div>
+	<hr>
+	<button onclick="delete_store()">Reset</button>
+</body>
+</html>
