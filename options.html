@@ -8,12 +8,6 @@
 			console.log( localStorage );
 			SGChecker.pref_init();
 		}
-		function delete_store() {
-			delete localStorage.comments;
-			delete localStorage.messages;
-			delete localStorage.debug;
-			delete localStorage.url_action;
-		}
 	</script>
 </head>
 <body>
@@ -35,7 +29,5 @@
 			<div id="sg_debug_options_div">
 				Enable debug: 
 			</div>
-	<hr>
-	<button onclick="delete_store()">Reset</button>
 </body>
 </html>

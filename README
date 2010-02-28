@@ -1,0 +1,4 @@
+SGChecker is a Google Chrome extension that displays message and comment counts.  Ajax.js and LoadAnimation.js 
+could be used by other projcets to implement other browser extensions that do similar things. 
+
+To get to Options type: chrome:extensions in the address bar.
