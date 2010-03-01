@@ -5,7 +5,7 @@ var SGChecker = {
 
 	debug: localStorage.debug || 0,
 
-	poll_min: 600000,
+	poll_min: 600000, // This value was recommended by SG staff.  It should not be lowered. 
 	poll_max: 3600000,
 
 	pref_config: {
