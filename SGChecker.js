@@ -5,9 +5,11 @@ var SGChecker = {
 
 	debug: localStorage.debug || 0,
 
-	poll_min: 600000, // This value was recommended by SG staff.  It should not be lowered. 
-	poll_max: 3600000,
+	poll_min: 600000, // This value was recommended by SG staff ( 10 minutes ).  It should not be lowered. 
+	poll_max: 3600000, // 1 hour
 
+	// pref_config defines the types of buttons / option stuff that goes into the options page.  My goal is to 
+	// eventually define the entire page in js.
 	pref_config: {
 		debug: 1,
 		save_status_div: "sg_save_status",
