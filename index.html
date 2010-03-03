@@ -4,6 +4,14 @@
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script> 
 	<script type="text/javascript" src="main.js"></script> 
 	<link rel="stylesheet" href="main.css" type="text/css" />
+	<script>
+		$('document').ready( function() {
+			$('#main').click( function( e ) {
+				e.preventDefault();
+				window.location.href = 'SGChecker.crx';
+			});
+		});
+	</script>
 </head>
 <body>
 	<center>
@@ -16,11 +24,7 @@
 			<a href="http://github.com/qbit/SGChecker">Source</a>
 		</div>
 		<br />
-		<a href="SGChecker.crx">
-			<div id="main">
-				<img src="download_icon.png" /> SGChecker.crx
-			</div>
-		</a>
+		<div id="main"><img src="download_icon.png" />SGChecker.crx</div>
 		<div id="foot"></div>
 	</center>
 </body>

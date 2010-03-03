@@ -3,6 +3,7 @@ body{font-family:"Lucdia Grande",arial,sans-serif;}
 a{color:#000;}
 a:hover{}
 #main{
+	cursor: pointer;
 	width: 5%;
 	font-size: 10px;
 	background-color: #eee;
