@@ -10,6 +10,6 @@
    "name": "SuicideGirls Checker",
    "options_page": "options.html",
    "permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*" ],
-   "update_url": "http://deftly.net/storage/sgchecker/update.xml",
+   "update_url": "http://qbit.github.com/SGChecker/update.xml",
    "version": "2.0"
 }
