@@ -121,6 +121,15 @@ var SGChecker = {
 		chrome.browserAction.setIcon( {path: this.liImage} );
 	},
 
+	is_sg_url: function( url ) {
+		var sg = SGChecker.get_url_pref();
+		if ( url.indexOf( sg ) != 0 ){
+			return false;
+		}
+
+		return url.length == sg.length || url[sg.length] == '?' || url[sg.length] == '#'; 
+	},
+
 	get_url_pref: function() { 
 		var url_pref = localStorage.url_action || "main_page";	
 		return this.sg_pref_urls[ url_pref ]; 

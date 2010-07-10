@@ -34,6 +34,16 @@
 		Ajax.make_request( SGChecker.success, SGChecker.error );
 	};
 
+	chrome.tabs.onUpdated.addListener( function( tabId, changeInfo ) {
+		if ( changeInfo.url && SGChecker.is_sg_url( changeInfo.url ) ) {
+			if ( SGChecker.debug ) {
+				console.log( "Reloading because we are on your pref page" );
+			}
+			Ajax.make_request( SGChecker.success, SGChecker.error );
+		}
+	});
+			
+
 	</script>
 </head>
 <body onload="init()"> 
