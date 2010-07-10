@@ -11,5 +11,5 @@
    "options_page": "options.html",
    "permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*" ],
    "update_url": "http://qbit.github.com/SGChecker/update.xml",
-   "version": "2.2"
+   "version": "2.2.1"
 }
