@@ -3,6 +3,8 @@ var SGChecker = {
 	liImage: "sg_in.png",
 	loImage: "sg_not_in.png",
 
+	has_notified: 0,
+
 	debug: localStorage.debug || 0,
 
 	poll_min: 600000, // This value was recommended by SG staff ( 10 minutes ).  It should not be lowered. 
@@ -50,8 +52,28 @@ var SGChecker = {
 
 		if ( result != '0' ) {
 			LoadAnimation.set_count( result );
+
+			var msg = 'Message';
+
+			if ( localStorage.comments ) {
+				msg = 'Comment';
+			}
+
+			var notif = webkitNotifications.createNotification( 
+				'icon_48.png',
+				'New ' + msg + '!',
+				'Someone has sent you some love!'
+			);
+
+			// only show notification if we receive more notifications.. 
+			if ( ! localStorage.prev_result || localStroage.prev_result < parseInt( result, 10 ) ) {
+				localStorage.prev_result = parseInt( result, 10 );
+				notif.show();
+			}
+
 		} else {
 			LoadAnimation.set_count( );
+			localStorage.prev_result = 0;
 		}
 
 		SGChecker.schedule();

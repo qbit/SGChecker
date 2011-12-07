@@ -15,7 +15,7 @@
    },
    "name": "SuicideGirls Checker",
    "options_page": "options.html",
-   "permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*" ],
+   "permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*", "notifications" ],
    "update_url": "http://qbit.github.com/SGChecker/update.xml",
    "version": "2.2.2"
 }
