@@ -4,6 +4,12 @@
       "default_title": ""
    },
    "description": "Shows your SG message count",
+   "content_scripts": [
+		{
+			"matches": [ "https://*.suicidegirls.com/*", "http://*.suicidegirls.com/*" ],
+			"js": [ "sg_helper.js" ]
+		}
+   ],
    "icons": {
       "128": "icon_128.png"
    },
@@ -11,5 +17,5 @@
    "options_page": "options.html",
    "permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*" ],
    "update_url": "http://qbit.github.com/SGChecker/update.xml",
-   "version": "2.2.1"
+   "version": "2.2.2"
 }
