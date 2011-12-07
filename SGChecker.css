@@ -34,6 +34,15 @@ body {
   margin-top:1em;
 }
 
+table {
+	border-collapse:collapse;
+}
+
+td {
+	border: 1px solid black;
+	padding: 10px;
+}
+
 .status {
 	position: absolute;
 	display: none;
