@@ -2,6 +2,7 @@ var sg_helpers = [
 	{ 
 		name: "addNameToImage", 
 		desc: "Adds girl name / album name to the alt tag of an image for easy set identification from group posts, boards.",
+		enabled: true,
 		fn: function() {
 			var sgImages  =  document.getElementsByTagName( 'img' );
 
@@ -20,6 +21,9 @@ var sg_helpers = [
 (function(){
 	var i,l;
 	for ( i = 0, l = sg_helpers.length; i < l; i++ ) {
-		sg_helpers[i].fn();
+
+		if ( sg_helpers[i].enabled ) {
+			sg_helpers[i].fn();
+		}
 	}
 })()

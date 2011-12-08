@@ -73,7 +73,8 @@ var SGChecker = {
 
 		} else {
 			LoadAnimation.set_count( );
-			localStorage.prev_result = 0;
+			console.log( "deleting previous result" );
+			delete localStorage.prev_result;
 		}
 
 		SGChecker.schedule();
