@@ -37,7 +37,7 @@ var sg_helpers = {
 
 				btn1.onclick = function() {
 					sgAs = document.getElementsByTagName( 'a' ); for ( var i = 0, l = sgAs.length; i < l; i++ ) { 
-						if ( sgAs[i].getAttribute('onclick') && sgAs[i].innerHTML.match( /show 10 more/ ) ) { 
+						if ( sgAs[i].getAttribute('onclick') && sgAs[i].getAttribute('onclick').match( /stopWatchingEvent/ ) ) { 
 							sgAs[i].click();
 						}
 					}
