@@ -56,7 +56,8 @@ var Ajax = {
 
 							var xml = A.responseXML;
 							
-							var obj = eval( ''+Ajax.module_name+'.gets()' );
+							var obj = SGChecker.gets();
+							//var obj = eval( ''+Ajax.module_name+'.gets()' );
 							/*
 							 * fun little session in getting multiple xpath stuff.
 							 * it's too dificult to display multiple results 

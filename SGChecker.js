@@ -1,5 +1,4 @@
 var SGChecker = {
-
 	liImage: "sg_in.png",
 	loImage: "sg_not_in.png",
 
@@ -181,10 +180,14 @@ var SGChecker = {
 	},
 
 	pref_save: function( name, val ) {
+		var o = {};
 		if ( SGChecker.debug ) {
 			console.log( "Saving %s in %s", val, name );
 		}
 		localStorage[ name ] = val;
+		o[name] = val;
+
+		chrome.storage.sync.set( o, function() {} );
 
 		chrome.extension.getBackgroundPage().reload();
 

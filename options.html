@@ -3,33 +3,8 @@
 	<title>SGChecker Options</title>
 	<script src="SGChecker.js" type="text/javascript"></script>
 	<script src="sg_helper.js" type="text/javascript"></script>
+	<script src="options.js" type="text/javascript"></script>
 	<link href="SGChecker.css" rel="stylesheet" type="text/css">
-	<script>
-		window.onload = function() {
-			SGChecker.pref_init();
-			console.log( localStorage );
-
-			var i, l;
-			for ( i = 0, l = sg_helpers.length; i < l; i++ ) {
-				var script = sg_helpers[i];
-				var table = document.getElementById( 'scripts' );
-				var tr = document.createElement( 'tr' );
-
-				var td1 = document.createElement( 'td' );
-				var td2 = document.createElement( 'td' );
-				var td3 = document.createElement( 'td' );
-				
-				td1.innerHTML = script.name;
-				td2.innerHTML = script.desc;
-				td3.innerHTML = script.enabled;
-
-				tr.appendChild( td1 );
-				tr.appendChild( td2 );
-				tr.appendChild( td3 );
-				table.appendChild( tr );
-			}
-		}
-	</script>
 </head>
 <body>
 	<div id="sg_save_status" class="status">Saved..</div>

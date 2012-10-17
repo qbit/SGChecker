@@ -1,21 +1,25 @@
 {
-   "background_page": "background.html",
-   "browser_action": {
-      "default_title": ""
-   },
-   "description": "Shows your SG message count",
-   "content_scripts": [
+	"manifest_version": 2,
+	"browser_action": {
+		"default_title": "SGChecker v3.0.0",
+		"default_icon": "sg_not_in.png"
+	},
+	"background": {
+		"page": "background.html"
+	},
+	"description": "Shows SG message/comment count and enables various helper scripts.",
+	"content_scripts": [
 		{
 			"matches": [ "https://*.suicidegirls.com/*", "http://*.suicidegirls.com/*" ],
 			"js": [ "sg_helper.js" ]
 		}
-   ],
-   "icons": {
-      "128": "icon_128.png"
-   },
-   "name": "SuicideGirls Checker",
-   "options_page": "options.html",
-   "permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*", "notifications" ],
-   "update_url": "http://qbit.github.com/SGChecker/update.xml",
-   "version": "2.2.2"
+	],
+	"icons": {
+		"128": "icon_128.png"
+	},
+	"name": "SuicideGirls Checker",
+	"options_page": "options.html",
+	"permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*", "notifications", "storage" ],
+	"update_url": "http://qbit.github.com/SGChecker/update.xml",
+	"version": "3.0.0"
 }
