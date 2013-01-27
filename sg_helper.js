@@ -16,6 +16,39 @@ var sg_helpers = {
 			}
 		}
 	},
+	"addVideoDownloadLink": {
+		name: "addVideoDownloadLink",
+		desc: "Adds a download video link to the video description page.",
+		enabled: "true",
+		fn: function() {
+			if ( window.location.pathname.match( /\/videos\// ) ) {
+				var params = document.getElementsByTagName( 'param' ), i, l;
+				var si = document.getElementsByClassName( 'setInfo' );
+				var a = document.createElement( 'a' );
+
+				console.log( params, si, a );
+
+				for ( i = 0, l = si.length; i < l; i++ ) {
+					if ( si[i].id && si[i].id.match( /video/i ) ) {
+						si = si[i];
+					}
+				}
+
+				for ( i = 0, l = params.length; i < l; i++ ) {
+					if ( params[i] && params[i].name && params[i].name === 'href' ) {
+						params = params[i];
+					}
+				}
+
+				if ( ! params.length && ! si.length ) { 
+					a.href = params.getAttribute( 'value' );
+					a.innerText = 'Download Video';
+
+					si.appendChild( a );
+				}
+			}
+		}
+	},
 	"addRemoveAllToFeed": {
 		name: "addRemoveAllToFeed",
 		desc: "Adds a remove-all button to the feeds page.",
