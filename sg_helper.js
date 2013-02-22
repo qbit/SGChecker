@@ -208,7 +208,7 @@ var sg_helpers = {
 	},
 	"addSetDownloadLink": {
 		name: "addSetDownloadLink",
-		desc: "Adds a download link for a given image set.",
+		desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
 		enabled: "false",
     fn: function() {
       if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
