@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"browser_action": {
-		"default_title": "SGChecker v3.1.0",
+		"default_title": "SGChecker v3.2.2",
 		"default_icon": "sg_not_in.png"
 	},
 	"background": {
@@ -11,7 +11,7 @@
 	"content_scripts": [
 		{
 			"matches": [ "https://*.suicidegirls.com/*", "http://*.suicidegirls.com/*" ],
-			"js": [ "sg_helper.js" ]
+			"js": [ "sg_helper.js", "jszip.js" ]
 		}
 	],
 	"icons": {
@@ -24,5 +24,5 @@
   "web_accessible_resources": [
     "icon_48.png"
   ],
-	"version": "3.1.1"
+	"version": "3.2.2"
 }

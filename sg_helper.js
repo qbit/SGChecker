@@ -64,6 +64,28 @@ Gallery.prototype.addImages = function( imgs ) {
         this.images.push(img);
     }
 };
+Gallery.prototype.overlay = function() {
+    //
+// function addToFavs()
+// {
+//   var addPath = '';
+//   var pic = pics[activePic];
+// 
+//   var filename = pic[0];
+//   var favoriteId = parseInt(pic[8]);
+//   var favorite = parseInt(pic[3]);
+// 
+// //  alert('0: ' + pic[0] + "\n1: " +pic[1] + "\n2: " +pic[2] + "\n3: " +pic[3] + "\n4: " +pic[4] + "\n5: " +pic[5] + "\n6: " +pic[6] + "\n7: " + pic[7] + "\n8: " + pic[8]);
+//   var imagePath = filename.split('/');
+//   var girl = imagePath[3];
+//   var setName = imagePath[5];
+//   var picName = favoriteId;
+// 
+//   if (!favorite) {
+//     loadDoc('/xml/pics/addFave/' + picName + '/', 1);
+//   }
+// }"
+};
 Gallery.prototype.clear = function () {
     var i, l, c;
     for (i = 0, l = this.fg.children.length; i < l; i++) {
@@ -184,6 +206,89 @@ var sg_helpers = {
 			}
 		}
 	},
+	"addSetDownloadLink": {
+		name: "addSetDownloadLink",
+		desc: "Adds a download link for a given image set.",
+		enabled: "false",
+    fn: function() {
+      if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
+        var head = document.getElementsByClassName( 'launch_title' )[0],
+        a = document.createElement( 'a' ),
+        set_title = head.firstChild.innerText,
+        girl = document.getElementsByClassName( 'name' )[0].innerText;
+
+        a.innerText = " Create Download";
+        a.style.font = 'normal 10px Arial';
+        a.style.cursor = 'pointer';
+
+        head.appendChild( a );
+
+        a.onclick = function() {
+          var set = document.getElementsByClassName( 'pic' ), i, l, images = [],
+          zg, zf, count = 1, tot = 0,
+          zip = new JSZip(), blob, link;
+
+          tot = set.length;
+          set_title = set_title.replace( / /g, '_' );
+
+          zg = zip.folder( girl );
+          zf = zg.folder( set_title );
+
+          a.innerText = " Generating: 0%";
+
+          function done() {
+            var blob = zip.generate({type:"blob"});
+            var l = document.createElement('a');
+            l.style.font = 'normal 10px Arial';
+            l.style.cursor = 'pointer';
+
+            l.href = window.URL.createObjectURL(blob);
+            l.download = girl + '_' + set_title + ".zip";
+            l.innerText = ' Download';
+
+            a.parentNode.appendChild(l);
+            a.parentNode.removeChild(a);
+          }
+
+          function inc( data, name ) {
+            if ( count >= tot ) {
+              a.innerText = ' Download';
+              done();
+            } else {
+              zf.file( name, data, { type: 'arraybuffer' } );
+            }
+
+            count++;
+          }
+
+          function addData( url, name, fn ) {
+            var req = new XMLHttpRequest();
+            req.overrideMimeType("text/plain; charset=x-user-defined");
+            req.responseType = "arraybuffer";
+            req.open('GET', url, true);
+
+            req.onreadystatechange = function( data ) {
+              a.innerText = ' Generating : ' + parseInt( Math.floor( count/tot * 100 ), 10 ) + '%';
+              if ( req.readyState === 4 && req.status === 200 ) { 
+                var blob = req.response;
+                fn.call( null, blob, name );
+              }
+            }
+
+            req.send(null);
+          }
+
+          for ( i = 0, l = set.length; i < l; i++ ) {
+            var s = set[i].firstChild.href.split( /\// ), name;
+            name = s[s.length - 1];
+
+
+            addData(set[i].firstChild.href, name, inc )
+          }
+        }
+      }
+    }
+  },
 	"addVideoDownloadLink": {
 		name: "addVideoDownloadLink",
 		desc: "Adds a download video link to the video description page.",
@@ -248,7 +353,7 @@ var sg_helpers = {
     desc: "Adds an alternative gallery viewer with Right / Left mouse button navigation.",
     enabled: "true",
     fn: function() {
-      if ( window.location.pathname.match( /photos/ ) || window.location.pathname.match( /albums/ ) ) {
+      if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
 
         var nav = document.getElementsByClassName( 'launch_nav' )[0],
         a = document.createElement( 'a' ),
@@ -369,7 +474,7 @@ function size(obj) {
 function check( name ) {
 	chrome.storage.sync.get( name, function( o ) {
     var a;
-		if ( size(o) === 0 ) { 
+    if ( size(o) === 0 && sg_helpers[name].enabled !== "false") { 
 			sg_helpers[name].fn();
 			sg_helpers[name].enabled = "true";
 		} else {
