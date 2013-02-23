@@ -11,7 +11,7 @@ var Gallery = function (imgs ) {
     this.bg = document.createElement('div');
 
     this.bg.style.width = '100%';
-    this.bg.style.height = '100%';
+    this.bg.style.height = document.body.scrollHeight + 'px';
     this.bg.style.position = 'absolute';
     this.bg.style.textAlign = 'center';
     this.bg.style.top = 0;
