@@ -18,6 +18,7 @@ var Gallery = function (imgs ) {
     this.bg.style.left = 0;
     this.bg.style.backgroundColor = 'rgba(0,0,0,0.6)';
     this.bg.style.display = 'none';
+    this.bg.style.zIndex = 110;
     this.bg.onclick = function() {
       self.stop();
     };
