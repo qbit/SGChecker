@@ -461,6 +461,14 @@ var sg_helpers = {
 				bt.insertBefore( btn3, bt.firstChild );
 			}
 		}
+	},
+	"postButtonsEnhanced": {
+		name: "postButtonsEnhanced",
+		desc: "Makes enhancements to the post/comment buttons.",
+		enabled: "true",
+		fn: function() {
+			console.log('getting called');
+		}
 	}
 };
 
