@@ -369,6 +369,8 @@ var sg_helpers = {
         sggallery = new Gallery( images );
 
         a.innerText = 'SGGallery';
+        
+        a.setAttribute('href','#');
 
         a.onclick = function() { 
           sggallery.start();
