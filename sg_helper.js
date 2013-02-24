@@ -469,7 +469,15 @@ var sg_helpers = {
 		desc: "Makes enhancements to the post/comment buttons.",
 		enabled: "true",
 		fn: function() {
-			console.log('getting called');
+			var elems = document.getElementsByClassName('in');
+			console.log(elems);
+			for( var i = 0; i < elems.length; i++ ) {
+				console.log('key is ' + i);
+				var elem = elems[i].getElementsByTagName('a')[0];
+				console.log(elem);
+				console.log(elem.getAttribute('href').replace('insertFormat','enhancedInsertFormat'));
+				elem.setAttribute('href', elem.getAttribute('href').replace('insertFormat','enhancedInsertFormat'));
+			}
 		}
 	}
 };
@@ -482,6 +490,17 @@ function size(obj) {
 		}
 	}
 	return s;
+}
+
+function enhancedInsertFormat( mode, url ) {
+	console.log('calling enhancedInsertFormat');
+	switch(mode) {
+		case 'youtube':
+			//do stuff;
+			break;
+		default:
+			insertFormat(mode,url);
+	}
 }
 
 function check( name ) {
