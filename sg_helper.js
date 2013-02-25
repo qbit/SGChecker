@@ -1,7 +1,7 @@
 /*global Image, document, scroll, unescape, window, chrome */
 var Gallery = function (imgs ) {
-	if( !document.body )
-		return;
+    if( !document.body )
+        return;
     var i, l, img, self = this;
     this.running = false;
 
