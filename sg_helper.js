@@ -1,5 +1,7 @@
 /*global Image, document, scroll, unescape, window, chrome */
 var Gallery = function (imgs ) {
+	if( !document.body )
+		return;
     var i, l, img, self = this;
     this.running = false;
 
@@ -11,13 +13,14 @@ var Gallery = function (imgs ) {
     this.bg = document.createElement('div');
 
     this.bg.style.width = '100%';
-    this.bg.style.height = '100%';
+    this.bg.style.height = document.body.scrollHeight + 'px';
     this.bg.style.position = 'absolute';
     this.bg.style.textAlign = 'center';
     this.bg.style.top = 0;
     this.bg.style.left = 0;
     this.bg.style.backgroundColor = 'rgba(0,0,0,0.6)';
     this.bg.style.display = 'none';
+    this.bg.style.zIndex = 110;
     this.bg.onclick = function() {
       self.stop();
     };
@@ -369,6 +372,8 @@ var sg_helpers = {
         sggallery = new Gallery( images );
 
         a.innerText = 'SGGallery';
+        
+        a.setAttribute('href','#');
 
         a.onclick = function() { 
           sggallery.start();
