@@ -470,14 +470,14 @@ var sg_helpers = {
 		enabled: "true",
 		fn: function() {
 			var elems = document.getElementsByClassName('in');
-			console.log(elems);
 			for( var i = 0; i < elems.length; i++ ) {
-				console.log('key is ' + i);
 				var elem = elems[i].getElementsByTagName('a')[0];
-				console.log(elem);
-				console.log(elem.getAttribute('href').replace('insertFormat','enhancedInsertFormat'));
 				elem.setAttribute('href', elem.getAttribute('href').replace('insertFormat','enhancedInsertFormat'));
 			}
+			var scriptElem = document.createElement('script');
+			console.log(enhancedInsertFormat.toString());
+			scriptElem.innerHTML = enhancedInsertFormat.toString();
+			document.body.appendChild(scriptElem);
 		}
 	}
 };
@@ -492,15 +492,27 @@ function size(obj) {
 	return s;
 }
 
-function enhancedInsertFormat( mode, url ) {
+function enhancedInsertFormat( mode, method ) {
 	console.log('calling enhancedInsertFormat');
+	if(!method)
+		method="insertTarget"
+	method=$(method);
+	var c=getSelectedText(method);
 	switch(mode) {
 		case 'youtube':
-			//do stuff;
+			a=c?c:a=prompt("Enter the address of the YouTube page containing the video you'd like to embed","");
+			if(a!==null){
+				a = a.replace(/(^.*\?)(.*)(v=[^&]*)(.*)/,'$1$3');
+				f="[YOUTUBE]"+a+"[/YOUTUBE]";//do stuff;
+			}
 			break;
 		default:
-			insertFormat(mode,url);
+			insertFormat(mode,method);
+			return;
 	}
+	if(f)
+		insertAtCursor(method,f);
+	g.focus();
 }
 
 function check( name ) {
