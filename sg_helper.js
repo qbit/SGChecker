@@ -22,7 +22,7 @@ var Gallery = function (imgs ) {
     this.bg.style.display = 'none';
     this.bg.style.zIndex = 110;
     this.bg.onclick = function() {
-      self.stop();
+    self.stop();
     };
 
     this.fg = document.createElement('div');
@@ -39,9 +39,9 @@ var Gallery = function (imgs ) {
     this.bg.appendChild(this.fg);
 
     if ( document.body ) {
-      document.body.appendChild(this.bg);
+    document.body.appendChild(this.bg);
     } else {
-      return;
+    return;
     }
 
     this.images = [];
@@ -54,7 +54,7 @@ var Gallery = function (imgs ) {
 Gallery.prototype.addImages = function( imgs ) {
     var i, l, img;
     if ( imgs.length > 0 ) {
-      this.hasImages = true;
+    this.hasImages = true;
     }
     for (i = 0, l = imgs.length; i < l; i++) {
         img = new Image();
@@ -115,7 +115,7 @@ Gallery.prototype.show = function (idx, back) {
     scroll(0, 0);
 
     if ( idx ) {
-      this.count = idx;
+    this.count = idx;
     }
 
     img = this.getImage(back);
@@ -192,29 +192,29 @@ Gallery.prototype.stop = function () {
 var sggallery = new Gallery();
 
 var sg_helpers = {
-	"addNameToImage": { 
-		name: "addNameToImage", 
-		desc: "Adds girl name / album name to the alt tag of an image for easy set identification from group posts, boards.",
-		enabled: "true",
-		fn: function() {
-			var sgImages  =  document.getElementsByTagName( 'img' ), i, l, parts, name, album;
+    "addNameToImage": { 
+        name: "addNameToImage", 
+        desc: "Adds girl name / album name to the alt tag of an image for easy set identification from group posts, boards.",
+        enabled: "true",
+        fn: function() {
+            var sgImages  =  document.getElementsByTagName( 'img' ), i, l, parts, name, album;
 
-			for( i = 0, l = sgImages.length; i < l; i++ ){
-				if( sgImages[i].src.indexOf("/girls/") > -1 ){
-					parts = sgImages[i].src.split( '/' );
-					name = parts[5];
-					album = parts[7];
-					sgImages[i].title = name + ' / ' + unescape( album );
-				}
-			}
-		}
-	},
-	"addSetDownloadLink": {
-		name: "addSetDownloadLink",
-		desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
-		enabled: "false",
+            for( i = 0, l = sgImages.length; i < l; i++ ){
+                if( sgImages[i].src.indexOf("/girls/") > -1 ){
+                    parts = sgImages[i].src.split( '/' );
+                    name = parts[5];
+                    album = parts[7];
+                    sgImages[i].title = name + ' / ' + unescape( album );
+                }
+            }
+        }
+    },
+    "addSetDownloadLink": {
+        name: "addSetDownloadLink",
+        desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
+        enabled: "false",
     fn: function() {
-      if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
+    if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
         var head = document.getElementsByClassName( 'launch_title' )[0],
         a = document.createElement( 'a' ),
         set_title = head.firstChild.innerText,
@@ -227,19 +227,19 @@ var sg_helpers = {
         head.appendChild( a );
 
         a.onclick = function() {
-          var set = document.getElementsByClassName( 'pic' ), i, l, images = [],
-          zg, zf, count = 1, tot = 0,
-          zip = new JSZip(), blob, link;
+        var set = document.getElementsByClassName( 'pic' ), i, l, images = [],
+        zg, zf, count = 1, tot = 0,
+        zip = new JSZip(), blob, link;
 
-          tot = set.length;
-          set_title = set_title.replace( / /g, '_' );
+        tot = set.length;
+        set_title = set_title.replace( / /g, '_' );
 
-          zg = zip.folder( girl );
-          zf = zg.folder( set_title );
+        zg = zip.folder( girl );
+        zf = zg.folder( set_title );
 
-          a.innerText = " Generating: 0%";
+        a.innerText = " Generating: 0%";
 
-          function done() {
+        function done() {
             var blob = zip.generate({type:"blob"});
             var l = document.createElement('a');
             l.style.font = 'normal 10px Arial';
@@ -251,122 +251,122 @@ var sg_helpers = {
 
             a.parentNode.appendChild(l);
             a.parentNode.removeChild(a);
-          }
+        }
 
-          function inc( data, name ) {
+        function inc( data, name ) {
             if ( count >= tot ) {
-              a.innerText = ' Download';
-              done();
+            a.innerText = ' Download';
+            done();
             } else {
-              zf.file( name, data, { type: 'arraybuffer' } );
+            zf.file( name, data, { type: 'arraybuffer' } );
             }
 
             count++;
-          }
+        }
 
-          function addData( url, name, fn ) {
+        function addData( url, name, fn ) {
             var req = new XMLHttpRequest();
             req.overrideMimeType("text/plain; charset=x-user-defined");
             req.responseType = "arraybuffer";
             req.open('GET', url, true);
 
             req.onreadystatechange = function( data ) {
-              a.innerText = ' Generating : ' + parseInt( Math.floor( count/tot * 100 ), 10 ) + '%';
-              if ( req.readyState === 4 && req.status === 200 ) { 
+            a.innerText = ' Generating : ' + parseInt( Math.floor( count/tot * 100 ), 10 ) + '%';
+            if ( req.readyState === 4 && req.status === 200 ) { 
                 var blob = req.response;
                 fn.call( null, blob, name );
-              }
+            }
             }
 
             req.send(null);
-          }
+        }
 
-          for ( i = 0, l = set.length; i < l; i++ ) {
+        for ( i = 0, l = set.length; i < l; i++ ) {
             var s = set[i].firstChild.href.split( /\// ), name;
             name = s[s.length - 1];
 
 
             addData(set[i].firstChild.href, name, inc )
-          }
         }
-      }
+        }
     }
-  },
-	"addVideoDownloadLink": {
-		name: "addVideoDownloadLink",
-		desc: "Adds a download video link to the video description page.",
-		enabled: "true",
-		fn: function() {
-			if ( window.location.pathname.match( /\/videos\// ) ) {
-				var params = document.getElementsByTagName( 'param' ), i, l,
-				si = document.getElementsByClassName( 'setInfo' ),
-				a = document.createElement( 'a' );
+    }
+},
+    "addVideoDownloadLink": {
+        name: "addVideoDownloadLink",
+        desc: "Adds a download video link to the video description page.",
+        enabled: "true",
+        fn: function() {
+            if ( window.location.pathname.match( /\/videos\// ) ) {
+                var params = document.getElementsByTagName( 'param' ), i, l,
+                si = document.getElementsByClassName( 'setInfo' ),
+                a = document.createElement( 'a' );
 
-				for ( i = 0, l = si.length; i < l; i++ ) {
-					if ( si[i].id && si[i].id.match( /video/i ) ) {
-						si = si[i];
-					}
-				}
+                for ( i = 0, l = si.length; i < l; i++ ) {
+                    if ( si[i].id && si[i].id.match( /video/i ) ) {
+                        si = si[i];
+                    }
+                }
 
-				for ( i = 0, l = params.length; i < l; i++ ) {
-					if ( params[i] && params[i].name && params[i].name === 'href' ) {
-						params = params[i];
-					}
-				}
+                for ( i = 0, l = params.length; i < l; i++ ) {
+                    if ( params[i] && params[i].name && params[i].name === 'href' ) {
+                        params = params[i];
+                    }
+                }
 
-				if ( ! params.length && ! si.length ) { 
-					a.href = params.getAttribute( 'value' );
-					a.innerText = 'Download Video';
+                if ( ! params.length && ! si.length ) { 
+                    a.href = params.getAttribute( 'value' );
+                    a.innerText = 'Download Video';
 
-					si.appendChild( a );
-				}
-			}
-		}
-	},
-  "replaceHTMLGallery": {
+                    si.appendChild( a );
+                }
+            }
+        }
+    },
+"replaceHTMLGallery": {
     name: "replaceHTMLGallery",
     desc: "Replaces the standard HTML gallery with SGGallery.",
     enabled: "true",
     fn: function() {
-      var set, i, l, images = [];
-      if ( ! sggallery.hasImages ) {
+    var set, i, l, images = [];
+    if ( ! sggallery.hasImages ) {
         set = document.getElementsByClassName( 'pic' );
 
         for ( i = 0, l = set.length; i < l; i++ ) {
-          images.push( set[i].firstChild.href );
+        images.push( set[i].firstChild.href );
         }
 
         sggallery.addImages( images );
-      }
-
-      function makeLink( idx ) {
-        return function( e ) {
-          sggallery.start( idx );
-          return false;
-        };
-      }
-
-      for ( i = 0, l = set.length; i < l; i++ ) {
-        set[i].firstChild.onclick = makeLink( i );
-      }
     }
-  },
-  "addNewGalleryViewer": {
+
+    function makeLink( idx ) {
+        return function( e ) {
+        sggallery.start( idx );
+        return false;
+        };
+    }
+
+    for ( i = 0, l = set.length; i < l; i++ ) {
+        set[i].firstChild.onclick = makeLink( i );
+    }
+    }
+},
+"addNewGalleryViewer": {
     name: "addNewGalleryViewer",
     desc: "Adds an alternative gallery viewer with Right / Left mouse button navigation.",
     enabled: "true",
     fn: function() {
-      if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
+    if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
 
         var nav = document.getElementsByClassName( 'launch_nav' )[0],
         a = document.createElement( 'a' ),
         pho = document.getElementsByClassName( 'launch_date_photographer' )[0],
         li = document.createElement( 'li' ), i, l, set, gal, images = [];
-      
+    
         set = document.getElementsByClassName( 'pic' );
 
         for ( i = 0, l = set.length; i < l; i++ ) {
-          images.push( set[i].firstChild.href );
+        images.push( set[i].firstChild.href );
         }
 
         sggallery = new Gallery( images );
@@ -376,7 +376,7 @@ var sg_helpers = {
         a.setAttribute('href','#');
 
         a.onclick = function() { 
-          sggallery.start();
+        sggallery.start();
         };
 
         li.appendChild( a );
@@ -385,162 +385,161 @@ var sg_helpers = {
         pho.style.width = '250px';
 
         nav.childNodes[1].insertBefore( li, nav.childNodes[1].firstChild );
-      }
     }
-  },
-	"addRemoveAllToFeed": {
-		name: "addRemoveAllToFeed",
-		desc: "Adds a remove-all button to the feeds page.",
-		enabled: "true",
-		fn: function() {
-			if ( window.location.pathname.match( /\/my\// ) ) {
-				var bt = document.getElementById( 'browserRight' ),
-				btn1 = document.createElement( 'button' ),
-				btn2 = document.createElement( 'button' ),
-				btn3 = document.createElement( 'button' ),
-				btn4 = document.createElement( 'button' ),
-				sgAs;
+    }
+},
+    "addRemoveAllToFeed": {
+        name: "addRemoveAllToFeed",
+        desc: "Adds a remove-all button to the feeds page.",
+        enabled: "true",
+        fn: function() {
+            if ( window.location.pathname.match( /\/my\// ) ) {
+                var bt = document.getElementById( 'browserRight' ),
+                btn1 = document.createElement( 'button' ),
+                btn2 = document.createElement( 'button' ),
+                btn3 = document.createElement( 'button' ),
+                btn4 = document.createElement( 'button' ),
+                sgAs;
 
-				btn1.innerHTML = "Remove All";
-				btn2.innerHTML = "Load All";
-				btn3.innerHTML = "Expand All";
-				btn4.innerHTML = "Expand SPOILERS";
+                btn1.innerHTML = "Remove All";
+                btn2.innerHTML = "Load All";
+                btn3.innerHTML = "Expand All";
+                btn4.innerHTML = "Expand SPOILERS";
 
-				btn1.onclick = function() {
-          var i, l;
-          sgAs = document.getElementsByTagName( 'a' ); 
-          for ( i = 0, l = sgAs.length; i < l; i++ ) { 
-						if ( sgAs[i].getAttribute('onclick') && sgAs[i].getAttribute('onclick').match( /stopWatchingEvent/ ) ) { 
-							sgAs[i].click();
-						}
-					}
-				};
+                btn1.onclick = function() {
+        var i, l;
+        sgAs = document.getElementsByTagName( 'a' ); 
+        for ( i = 0, l = sgAs.length; i < l; i++ ) { 
+                        if ( sgAs[i].getAttribute('onclick') && sgAs[i].getAttribute('onclick').match( /stopWatchingEvent/ ) ) { 
+                            sgAs[i].click();
+                        }
+                    }
+                };
 
-				btn2.onclick = function() {
-          var i, l;
-          sgAs = document.getElementsByTagName( 'a' ); 
-          for ( i = 0, l = sgAs.length; i < l; i++ ) { 
-						if ( sgAs[i].getAttribute('onclick') && sgAs[i].innerHTML.match( /show 10 more/ ) ) { 
-							sgAs[i].click();
-						}
-					}
-				};
+                btn2.onclick = function() {
+        var i, l;
+        sgAs = document.getElementsByTagName( 'a' ); 
+        for ( i = 0, l = sgAs.length; i < l; i++ ) { 
+                        if ( sgAs[i].getAttribute('onclick') && sgAs[i].innerHTML.match( /show 10 more/ ) ) { 
+                            sgAs[i].click();
+                        }
+                    }
+                };
 
-				btn3.onclick = function() {
-          var i, l;
-					sgAs = document.getElementsByTagName( 'a' );
-					for ( i = 0, l = sgAs.length; i < l; i++ ) { 
-						if ( btn3.innerHTML === 'Expand All' ) {
-							if ( sgAs[i].innerHTML.match( 'Show more' ) ) { 
-								sgAs[i].click();
-							}
-						} else {
-							if ( sgAs[i].innerHTML.match( 'Show less' ) ) { 
-								sgAs[i].click();
-							}
-						}
-					}
-					if ( btn3.innerHTML === 'Collapse All' ) {
-						btn3.innerHTML = 'Expand All';
-					} else {
-						btn3.innerHTML = 'Collapse All';
-					}
-				};
+                btn3.onclick = function() {
+        var i, l;
+                    sgAs = document.getElementsByTagName( 'a' );
+                    for ( i = 0, l = sgAs.length; i < l; i++ ) { 
+                        if ( btn3.innerHTML === 'Expand All' ) {
+                            if ( sgAs[i].innerHTML.match( 'Show more' ) ) { 
+                                sgAs[i].click();
+                            }
+                        } else {
+                            if ( sgAs[i].innerHTML.match( 'Show less' ) ) { 
+                                sgAs[i].click();
+                            }
+                        }
+                    }
+                    if ( btn3.innerHTML === 'Collapse All' ) {
+                        btn3.innerHTML = 'Expand All';
+                    } else {
+                        btn3.innerHTML = 'Collapse All';
+                    }
+                };
 
-				btn4.onclick = function() {
-          var i, l;
-					sgAs = document.getElementsByTagName( 'a' );
-					for ( i = 0, l = sgAs.length; i < l; i++ ) { 
-						if ( sgAs[i].innerHTML.match( /SPOILERS\!/ ) ) { 
-							sgAs[i].click();
-						}
-					}
-				};
+                btn4.onclick = function() {
+        var i, l;
+                    sgAs = document.getElementsByTagName( 'a' );
+                    for ( i = 0, l = sgAs.length; i < l; i++ ) { 
+                        if ( sgAs[i].innerHTML.match( /SPOILERS\!/ ) ) { 
+                            sgAs[i].click();
+                        }
+                    }
+                };
 
-				bt.insertBefore( btn1, bt.firstChild );
-				bt.insertBefore( btn2, bt.firstChild );
-				bt.insertBefore( btn4, bt.firstChild );
-				bt.insertBefore( btn3, bt.firstChild );
-			}
-		}
-	},
-	"postButtonsEnhanced": {
-		name: "postButtonsEnhanced",
-		desc: "Makes enhancements to the post/comment buttons.",
-		enabled: "true",
-		fn: function() {
-			var elems = document.getElementsByClassName('in');
-			for( var i = 0; i < elems.length; i++ ) {
-				var elem = elems[i].getElementsByTagName('a')[0];
-				elem.setAttribute('href', elem.getAttribute('href').replace('insertFormat','enhancedInsertFormat'));
-			}
-			var scriptElem = document.createElement('script');
-			console.log(enhancedInsertFormat.toString());
-			scriptElem.innerHTML = enhancedInsertFormat.toString();
-			document.body.appendChild(scriptElem);
-		}
-	}
+                bt.insertBefore( btn1, bt.firstChild );
+                bt.insertBefore( btn2, bt.firstChild );
+                bt.insertBefore( btn4, bt.firstChild );
+                bt.insertBefore( btn3, bt.firstChild );
+            }
+        }
+    },
+    "postButtonsEnhanced": {
+        name: "postButtonsEnhanced",
+        desc: "Makes enhancements to the post/comment buttons.",
+        enabled: "true",
+        fn: function() {
+            var elems = document.getElementsByClassName('in');
+            for( var i = 0; i < elems.length; i++ ) {
+                var elem = elems[i].getElementsByTagName('a')[0];
+                elem.setAttribute('href', elem.getAttribute('href').replace('insertFormat','enhancedInsertFormat'));
+            }
+            var scriptElem = document.createElement('script');
+            scriptElem.innerHTML = enhancedInsertFormat.toString();
+            document.body.appendChild(scriptElem);
+        }
+    }
 };
 
 function size(obj) {
-	var s = 0, k;
-	for ( k in obj ) {
-		if ( obj.hasOwnProperty(k)) {
-			s++;
-		}
-	}
-	return s;
+    var s = 0, k;
+    for ( k in obj ) {
+        if ( obj.hasOwnProperty(k)) {
+            s++;
+        }
+    }
+    return s;
 }
 
 function enhancedInsertFormat( mode, method ) {
-	console.log('calling enhancedInsertFormat');
-	if(!method)
-		method="insertTarget"
-	method=$(method);
-	var c=getSelectedText(method);
-	switch(mode) {
-		case 'youtube':
-			a=c?c:a=prompt("Enter the address of the YouTube page containing the video you'd like to embed","");
-			if(a!==null){
-				a = a.replace(/(^.*\?)(.*)(v=[^&]*)(.*)/,'$1$3');
-				f="[YOUTUBE]"+a+"[/YOUTUBE]";//do stuff;
-			}
-			break;
-		default:
-			insertFormat(mode,method);
-			return;
-	}
-	if(f)
-		insertAtCursor(method,f);
-	g.focus();
+    console.log('calling enhancedInsertFormat');
+    if(!method)
+        method="insertTarget"
+    method=$(method);
+    var c=getSelectedText(method);
+    switch(mode) {
+        case 'youtube':
+            a=c?c:a=prompt("Enter the address of the YouTube page containing the video you'd like to embed","");
+            if(a!==null){
+                a = a.replace(/(^.*\?)(.*)(v=[^&]*)(.*)/,'$1$3');
+                f="[YOUTUBE]"+a+"[/YOUTUBE]";//do stuff;
+            }
+            break;
+        default:
+            insertFormat(mode,method);
+            return;
+    }
+    if(f)
+        insertAtCursor(method,f);
+    g.focus();
 }
 
 function check( name ) {
-	chrome.storage.sync.get( name, function( o ) {
+    chrome.storage.sync.get( name, function( o ) {
     var a;
     if ( size(o) === 0 && sg_helpers[name].enabled !== "false") { 
-			sg_helpers[name].fn();
-			sg_helpers[name].enabled = "true";
-		} else {
-			for ( a in o ) {
+            sg_helpers[name].fn();
+            sg_helpers[name].enabled = "true";
+        } else {
+            for ( a in o ) {
         if ( o.hasOwnProperty( a ) ) {
-          if ( o[a] === "true" )  {
+        if ( o[a] === "true" )  {
             sg_helpers[a].fn();
             sg_helpers[a].enabled = "true";
-          } else {
+        } else {
             sg_helpers[a].enabled = "false";
-          }
         }
-			}
-		}
-	});
+        }
+            }
+        }
+    });
 }
 
 (function(){
-	var i,l, n;
-	for ( n in sg_helpers ) {
-    if ( sg_helpers.hasOwnProperty( n ) ) {
-      check( sg_helpers[n].name );
+    var i,l, n;
+    for ( n in sg_helpers ) {
+        if ( sg_helpers.hasOwnProperty( n ) ) {
+            check( sg_helpers[n].name );
+        }
     }
-	}
 })();
