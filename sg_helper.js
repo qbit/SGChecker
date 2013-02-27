@@ -501,7 +501,8 @@ function enhancedInsertFormat( mode, method ) {
         case 'youtube':
             a=c?c:a=prompt("Enter the address of the YouTube page containing the video you'd like to embed","");
             if(a!==null){
-                a = a.replace(/(^.*\?)(.*)(v=[^&]*)(.*)/,'$1$3');
+                a = a.replace(/(^.*\?)(.*)(v=[^&]*)(.*)/,'$1$3')
+                  .replace( /^https/, 'http' );
                 f="[YOUTUBE]"+a+"[/YOUTUBE]";//do stuff;
             }
             break;
