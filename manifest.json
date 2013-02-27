@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"browser_action": {
-		"default_title": "SGChecker v3.2.2",
+		"default_title": "SGChecker v3.2.4",
 		"default_icon": "sg_not_in.png"
 	},
 	"background": {
@@ -17,12 +17,11 @@
 	"icons": {
 		"128": "icon_128.png"
 	},
-	"name": "SuicideGirls Checker",
+	"name": "SGChecker",
 	"options_page": "options.html",
 	"permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*", "notifications", "storage" ],
-	"update_url": "http://qbit.github.com/SGChecker/update.xml",
   "web_accessible_resources": [
     "icon_48.png"
   ],
-	"version": "3.2.2"
+	"version": "3.2.4"
 }
