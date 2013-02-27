@@ -22,7 +22,7 @@ var Gallery = function (imgs ) {
     this.bg.style.display = 'none';
     this.bg.style.zIndex = 110;
     this.bg.onclick = function() {
-    self.stop();
+        self.stop();
     };
 
     this.fg = document.createElement('div');
@@ -39,9 +39,9 @@ var Gallery = function (imgs ) {
     this.bg.appendChild(this.fg);
 
     if ( document.body ) {
-    document.body.appendChild(this.bg);
+        document.body.appendChild(this.bg);
     } else {
-    return;
+	return;
     }
 
     this.images = [];
@@ -54,7 +54,7 @@ var Gallery = function (imgs ) {
 Gallery.prototype.addImages = function( imgs ) {
     var i, l, img;
     if ( imgs.length > 0 ) {
-    this.hasImages = true;
+	this.hasImages = true;
     }
     for (i = 0, l = imgs.length; i < l; i++) {
         img = new Image();
