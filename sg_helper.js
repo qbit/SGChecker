@@ -145,8 +145,6 @@ Gallery.prototype.show = function (idx, back) {
 
         this.clear();
 
-	console.log('scale is ', scale);
-
 	img.style.height = (img.height*scale)+'px';
 	img.style.width = (img.width*scale)+'px';
 
