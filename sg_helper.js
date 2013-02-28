@@ -22,7 +22,7 @@ var Gallery = function (imgs ) {
     this.bg.style.display = 'none';
     this.bg.style.zIndex = 110;
     this.bg.onclick = function() {
-    self.stop();
+        self.stop();
     };
 
     this.fg = document.createElement('div');
@@ -39,9 +39,9 @@ var Gallery = function (imgs ) {
     this.bg.appendChild(this.fg);
 
     if ( document.body ) {
-    document.body.appendChild(this.bg);
+        document.body.appendChild(this.bg);
     } else {
-    return;
+	return;
     }
 
     this.images = [];
@@ -54,7 +54,7 @@ var Gallery = function (imgs ) {
 Gallery.prototype.addImages = function( imgs ) {
     var i, l, img;
     if ( imgs.length > 0 ) {
-    this.hasImages = true;
+	this.hasImages = true;
     }
     for (i = 0, l = imgs.length; i < l; i++) {
         img = new Image();
@@ -110,12 +110,12 @@ Gallery.prototype.getImage = function (rev) {
 };
 Gallery.prototype.show = function (idx, back) {
     var self = this,
-        img;
+        img, scaleX, scaleY, scale = 1, marginAdjust = 80;
 
     scroll(0, 0);
 
     if ( idx ) {
-    this.count = idx;
+        this.count = idx;
     }
 
     img = this.getImage(back);
@@ -127,6 +127,7 @@ Gallery.prototype.show = function (idx, back) {
 
             this.onmousedown = '';
 
+
             if (e.button === 0) {
                 self.show(null, false);
             }
@@ -135,10 +136,19 @@ Gallery.prototype.show = function (idx, back) {
             }
         }, true);
 
+	scaleX = ( (document.body.clientWidth-marginAdjust) < img.width ? (document.body.clientWidth-marginAdjust)/img.width : 1);
+	scaleY = ( (document.body.clientHeight-marginAdjust) < img.height ? (document.body.clientHeight-marginAdjust)/img.height : 1);
+
+	if( scaleX < 1 || scaleY < 1 ) {
+	    scale = (scaleX < scaleY ? scaleX : scaleY);
+	}
+
         this.clear();
 
-        this.fg.appendChild(img);
+	img.style.height = (img.height*scale)+'px';
+	img.style.width = (img.width*scale)+'px';
 
+        this.fg.appendChild(img);
     } else {
         this.stop();
         clearInterval(this.timer);
