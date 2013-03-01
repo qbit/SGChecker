@@ -1,5 +1,5 @@
 /*global Image, document, scroll, unescape, window, chrome */
-var Gallery = function (imgs ) {
+var Gallery = function ( imgs, overlay ) {
     if( !document.body )
         return;
     var i, l, img, self = this;
@@ -9,6 +9,10 @@ var Gallery = function (imgs ) {
     
     this.delay = 3000;
     this.count = 0;
+
+    this.overlay_fn = overlay || function() {
+      return;
+    };
 
     this.bg = document.createElement('div');
 
@@ -67,33 +71,26 @@ Gallery.prototype.addImages = function( imgs ) {
         this.images.push(img);
     }
 };
-Gallery.prototype.overlay = function() {
-    //
-// function addToFavs()
-// {
-//   var addPath = '';
-//   var pic = pics[activePic];
-// 
-//   var filename = pic[0];
-//   var favoriteId = parseInt(pic[8]);
-//   var favorite = parseInt(pic[3]);
-// 
-// //  alert('0: ' + pic[0] + "\n1: " +pic[1] + "\n2: " +pic[2] + "\n3: " +pic[3] + "\n4: " +pic[4] + "\n5: " +pic[5] + "\n6: " +pic[6] + "\n7: " + pic[7] + "\n8: " + pic[8]);
-//   var imagePath = filename.split('/');
-//   var girl = imagePath[3];
-//   var setName = imagePath[5];
-//   var picName = favoriteId;
-// 
-//   if (!favorite) {
-//     loadDoc('/xml/pics/addFave/' + picName + '/', 1);
-//   }
-// }"
+Gallery.prototype.overlay = function( ) {
+  var i, l, c;
+  this.has_overlay = true;
+  if ( this.overlay_ele && this.overlay_ele.parentNode ) {
+    this.overlay_ele.parentNode.removeChild( this.overlay_ele );
+  }
+
+  this.overlay_ele = document.createElement( 'div' );
+
+  this.fg.appendChild( this.overlay_ele );
+  this.overlay_fn( this.overlay_ele, this );
+  // fn.call( null, this.overlay_ele );
 };
 Gallery.prototype.clear = function () {
     var i, l, c;
     for (i = 0, l = this.fg.children.length; i < l; i++) {
+      if ( this.fg.children[i] ) {
         c = this.fg.children[i];
         c.parentNode.removeChild(c);
+      }
     }
 };
 Gallery.prototype.getImage = function (rev) {
@@ -119,6 +116,8 @@ Gallery.prototype.show = function (idx, back) {
     }
 
     img = this.getImage(back);
+
+    this.current_img = img;
 
     if (img) {
         img.addEventListener('mousedown', function (e) {
@@ -149,6 +148,7 @@ Gallery.prototype.show = function (idx, back) {
 	img.style.width = (img.width*scale)+'px';
 
         this.fg.appendChild(img);
+        this.overlay( img );
     } else {
         this.stop();
         clearInterval(this.timer);
@@ -371,15 +371,134 @@ var sg_helpers = {
         var nav = document.getElementsByClassName( 'launch_nav' )[0],
         a = document.createElement( 'a' ),
         pho = document.getElementsByClassName( 'launch_date_photographer' )[0],
-        li = document.createElement( 'li' ), i, l, set, gal, images = [];
+        li = document.createElement( 'li' ), i, l, set, gal, images = [], pics = {};
     
         set = document.getElementsByClassName( 'pic' );
 
         for ( i = 0, l = set.length; i < l; i++ ) {
         images.push( set[i].firstChild.href );
+        pics[set[i].firstChild.href] = set[i].parentNode.id.split(/_/)[1];
         }
 
-        sggallery = new Gallery( images );
+        sggallery = new Gallery( images, function( overlay, gallery ) {
+          var back = document.createElement( 'div' ),
+          forward = document.createElement( 'div' ),
+          addFav = document.createElement( 'div' );
+
+          back.innerText = '⬅';
+          forward.innerText = '➡';
+          addFav.innerText = '♥';
+
+          back.style.float = 'left';
+          forward.style.float = 'left';
+          addFav.style.float = 'left';
+
+          back.style.color = 'white';
+          forward.style.color = 'white';
+          addFav.style.color = '#b7115c';
+
+          back.style.fontSize = '4em';
+          forward.style.fontSize = '4em';
+          addFav.style.fontSize = '4em';
+
+          back.style.cursor = 'pointer';
+          forward.style.cursor = 'pointer';
+          addFav.style.cursor = 'pointer';
+
+          back.title = 'back';
+          forward.title = 'forward';
+          addFav.title = 'Add to favoriate images';
+
+          back.style.opacity = '0.1';
+          forward.style.opacity = '0.1';
+          addFav.style.opacity = '0.1';
+
+          back.onclick = function( e ) {
+            e.stopPropagation();
+            gallery.show(null, true);
+          };
+
+          forward.onclick = function( e ) {
+            e.stopPropagation();
+            gallery.show(null, false);
+          };
+
+          if ( window.location.pathname.match( /girls\/.*\/photos/ ) ) {
+            addFav.onclick = function( e ) {
+              var p, url = 'http://suicidegirls.com/xml/pics/addFave/';
+              e.stopPropagation();
+              p = imageToSGArray( gallery.current_img, pics );
+
+              ajax( url + p[8], function( data ) {
+                if ( data.match( '<success>1</success>' ) ) {
+                  alert( 'Added!' );
+                } else {
+                  alert( 'Something went wrong!' );
+                }
+              });
+            };
+          } else {
+            addFav.style.color = '#ccc';
+            addFav.title = null;
+            addFav.onclick = function( e ) {
+              e.stopPropagation();
+            }
+          }
+
+          addFav.onmouseover = function(e) {
+            var that = this,
+            big = false;
+            gallery.throbber = setInterval( function() {
+              if ( !big ) {
+                that.style.fontSize = '3.9em';
+              } else {
+                that.style.fontSize = '4em';
+              }
+
+              big = !big;
+            },300);
+          };
+
+          addFav.onmouseout = function(e) {
+            clearInterval( gallery.throbber );
+            this.style.fontSize = '4em';
+          };
+
+          overlay.style.backgroundColor = 'black';
+          overlay.style.padding = '5px';
+          overlay.style.width = '100px';
+          overlay.style.height = '50px';
+          overlay.style.borderRadius = '5px';
+          overlay.style.position = 'fixed';
+          overlay.style.top = '4em';
+          overlay.style.left = '50%';
+          overlay.style.marginLeft = '-30px';
+
+          overlay.style.backgroundColor = 'rgba(0,0,0,0.1)';
+
+          overlay.onmouseover = function(e) {
+            var i, l;
+            this.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            for ( i = 0, l = this.children.length; i < l; i++ ) {
+              // this.children[i].style.display = 'block';
+              this.children[i].style.opacity = '1';
+            }
+          };
+
+          overlay.onmouseout = function(e) {
+            var i, l;
+            this.style.backgroundColor = 'rgba(0,0,0,0.1)';
+            for ( i = 0, l = this.children.length; i < l; i++ ) {
+              // this.children[i].style.display = 'none';
+              this.children[i].style.opacity = '0.01';
+            }
+          };
+
+          overlay.appendChild( back );
+          overlay.appendChild( addFav );
+          overlay.appendChild( forward );
+
+        });
 
         a.innerText = 'SGGallery';
         
@@ -502,7 +621,6 @@ function size(obj) {
 }
 
 function enhancedInsertFormat( mode, method ) {
-    console.log('calling enhancedInsertFormat');
     if(!method)
         method="insertTarget"
     method=$(method);
@@ -523,6 +641,34 @@ function enhancedInsertFormat( mode, method ) {
     if(f)
         insertAtCursor(method,f);
     g.focus();
+}
+
+function imageToSGArray( img, pics ) {
+  var a = [], p = img.src.split( '/' );
+  a[0] = img.src;
+  a[1] = img.height;
+  a[2] = img.width;
+  a[3] = '';
+  a[4] = '';
+  a[5] = '';
+  a[6] = '';
+  a[7] = '';
+  a[8] = pics[img.src]; // need to figure out where to get this!
+  a[9] = '/girls/' + p[5];
+  return a;
+}
+
+function ajax( url, fn ) {
+    var req = new XMLHttpRequest();
+    req.open('GET', url, true);
+
+    req.onreadystatechange = function( data ) {
+      if ( req.readyState === 4 && req.status === 200 ) { 
+          fn.call( null, req.responseText );
+      }
+    }
+
+    req.send(null);
 }
 
 function check( name ) {
