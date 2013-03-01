@@ -407,7 +407,7 @@ var sg_helpers = {
 
           back.title = 'back';
           forward.title = 'forward';
-          addFav.title = 'Add to favoriate images';
+          addFav.title = 'Add to favorite images';
 
           back.style.opacity = '0.1';
           forward.style.opacity = '0.1';
