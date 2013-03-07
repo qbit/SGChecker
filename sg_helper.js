@@ -1,5 +1,5 @@
 /*global Image, document, scroll, unescape, window, chrome */
-var Gallery = function (imgs ) {
+var Gallery = function ( imgs, overlay, options ) {
     if( !document.body )
         return;
     var i, l, img, self = this;
@@ -9,6 +9,17 @@ var Gallery = function (imgs ) {
     
     this.delay = 3000;
     this.count = 0;
+
+    this.overlay_fn = overlay || function() {
+      return;
+    };
+
+    this.options = {};
+    for ( i in options ) {
+      if ( options.hasOwnProperty( i ) ) {
+        this.options[i] = options[i];
+      }
+    }
 
     this.bg = document.createElement('div');
 
@@ -67,33 +78,26 @@ Gallery.prototype.addImages = function( imgs ) {
         this.images.push(img);
     }
 };
-Gallery.prototype.overlay = function() {
-    //
-// function addToFavs()
-// {
-//   var addPath = '';
-//   var pic = pics[activePic];
-// 
-//   var filename = pic[0];
-//   var favoriteId = parseInt(pic[8]);
-//   var favorite = parseInt(pic[3]);
-// 
-// //  alert('0: ' + pic[0] + "\n1: " +pic[1] + "\n2: " +pic[2] + "\n3: " +pic[3] + "\n4: " +pic[4] + "\n5: " +pic[5] + "\n6: " +pic[6] + "\n7: " + pic[7] + "\n8: " + pic[8]);
-//   var imagePath = filename.split('/');
-//   var girl = imagePath[3];
-//   var setName = imagePath[5];
-//   var picName = favoriteId;
-// 
-//   if (!favorite) {
-//     loadDoc('/xml/pics/addFave/' + picName + '/', 1);
-//   }
-// }"
+Gallery.prototype.overlay = function( ) {
+  var i, l, c;
+  this.has_overlay = true;
+  if ( this.overlay_ele && this.overlay_ele.parentNode ) {
+    this.overlay_ele.parentNode.removeChild( this.overlay_ele );
+  }
+
+  this.overlay_ele = document.createElement( 'div' );
+
+  this.fg.appendChild( this.overlay_ele );
+  this.overlay_fn( this.overlay_ele, this );
+  // fn.call( null, this.overlay_ele );
 };
 Gallery.prototype.clear = function () {
     var i, l, c;
     for (i = 0, l = this.fg.children.length; i < l; i++) {
+      if ( this.fg.children[i] ) {
         c = this.fg.children[i];
         c.parentNode.removeChild(c);
+      }
     }
 };
 Gallery.prototype.getImage = function (rev) {
@@ -120,6 +124,8 @@ Gallery.prototype.show = function (idx, back) {
 
     img = this.getImage(back);
 
+    this.current_img = img;
+
     if (img) {
         img.addEventListener('mousedown', function (e) {
             e.preventDefault();
@@ -136,19 +142,26 @@ Gallery.prototype.show = function (idx, back) {
             }
         }, true);
 
-	scaleX = ( (document.body.clientWidth-marginAdjust) < img.width ? (document.body.clientWidth-marginAdjust)/img.width : 1);
-	scaleY = ( (document.body.clientHeight-marginAdjust) < img.height ? (document.body.clientHeight-marginAdjust)/img.height : 1);
+        if ( this.options.resize ) {
+          scaleX = ( (document.body.clientWidth-marginAdjust) < img.width ? (document.body.clientWidth-marginAdjust)/img.width : 1);
+          scaleY = ( (document.body.clientHeight-marginAdjust) < img.height ? (document.body.clientHeight-marginAdjust)/img.height : 1);
 
-	if( scaleX < 1 || scaleY < 1 ) {
-	    scale = (scaleX < scaleY ? scaleX : scaleY);
-	}
+          if( scaleX < 1 || scaleY < 1 ) {
+              scale = (scaleX < scaleY ? scaleX : scaleY);
+          }
+
+          img.style.height = (img.height*scale)+'px';
+          img.style.width = (img.width*scale)+'px';
+        }
 
         this.clear();
 
-	img.style.height = (img.height*scale)+'px';
-	img.style.width = (img.width*scale)+'px';
 
         this.fg.appendChild(img);
+
+        if ( this.options.overlay ) { 
+          this.overlay( img );
+        }
     } else {
         this.stop();
         clearInterval(this.timer);
@@ -206,7 +219,7 @@ var sg_helpers = {
         name: "addNameToImage", 
         desc: "Adds girl name / album name to the alt tag of an image for easy set identification from group posts, boards.",
         enabled: "true",
-        fn: function() {
+        fn: function( options ) {
             var sgImages  =  document.getElementsByTagName( 'img' ), i, l, parts, name, album;
 
             for( i = 0, l = sgImages.length; i < l; i++ ){
@@ -223,7 +236,7 @@ var sg_helpers = {
         name: "addSetDownloadLink",
         desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
         enabled: "false",
-    fn: function() {
+    fn: function( options ) {
     if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
         var head = document.getElementsByClassName( 'launch_title' )[0],
         a = document.createElement( 'a' ),
@@ -306,7 +319,7 @@ var sg_helpers = {
         name: "addVideoDownloadLink",
         desc: "Adds a download video link to the video description page.",
         enabled: "true",
-        fn: function() {
+        fn: function( options ) {
             if ( window.location.pathname.match( /\/videos\// ) ) {
                 var params = document.getElementsByTagName( 'param' ), i, l,
                 si = document.getElementsByClassName( 'setInfo' ),
@@ -337,7 +350,7 @@ var sg_helpers = {
     name: "replaceHTMLGallery",
     desc: "Replaces the standard HTML gallery with SGGallery.",
     enabled: "true",
-    fn: function() {
+    fn: function( options ) {
     var set, i, l, images = [];
     if ( ! sggallery.hasImages ) {
         set = document.getElementsByClassName( 'pic' );
@@ -365,21 +378,168 @@ var sg_helpers = {
     name: "addNewGalleryViewer",
     desc: "Adds an alternative gallery viewer with Right / Left mouse button navigation.",
     enabled: "true",
-    fn: function() {
+    options: {
+      "resize": {
+        "id" : "enResize",
+        "name": "Enable Resize",
+        "desc": "Automatically resize images based on screen size",
+        "enabled": true
+      },
+      "overlay": {
+        "id" : "enOverlay",
+        "name": "Enable Overlay",
+        "desc": "Enable the image overlay that displays next / previous / <3",
+        "enabled": true
+      }
+    },
+    fn: function( options ) {
     if ( window.location.pathname.match( /photos\/.+$/ ) || window.location.pathname.match( /albums\/.+$/ ) ) {
 
         var nav = document.getElementsByClassName( 'launch_nav' )[0],
         a = document.createElement( 'a' ),
         pho = document.getElementsByClassName( 'launch_date_photographer' )[0],
-        li = document.createElement( 'li' ), i, l, set, gal, images = [];
+        li = document.createElement( 'li' ), i, l, set, gal, images = [], pics = {},
+        overlay_fn = function( overlay, gallery ) {
+          var back = document.createElement( 'div' ),
+          forward = document.createElement( 'div' ),
+          addFav = document.createElement( 'div' );
+
+          back.innerText = '⬅';
+          forward.innerText = '➡';
+          addFav.innerText = '♥';
+
+          back.style.float = 'left';
+          forward.style.float = 'left';
+          addFav.style.float = 'left';
+
+          back.style.color = 'white';
+          forward.style.color = 'white';
+          addFav.style.color = '#b7115c';
+
+          back.style.fontSize = '4em';
+          forward.style.fontSize = '4em';
+          addFav.style.fontSize = '4em';
+
+          back.style.cursor = 'pointer';
+          forward.style.cursor = 'pointer';
+          addFav.style.cursor = 'pointer';
+
+          back.title = 'back';
+          forward.title = 'forward';
+          addFav.title = 'Add to favorite images';
+
+          back.style.opacity = '0.1';
+          forward.style.opacity = '0.1';
+          addFav.style.opacity = '0.1';
+
+          back.onclick = function( e ) {
+            e.stopPropagation();
+            gallery.show(null, true);
+          };
+
+          forward.onclick = function( e ) {
+            e.stopPropagation();
+            gallery.show(null, false);
+          };
+
+          if ( window.location.pathname.match( /girls\/.*\/photos/ ) ) {
+            addFav.onclick = function( e ) {
+              var p, url = 'http://suicidegirls.com/xml/pics/addFave/';
+              e.stopPropagation();
+              p = imageToSGArray( gallery.current_img, pics );
+
+              ajax( url + p[8], function( data ) {
+                if ( data.match( '<success>1</success>' ) ) {
+                  alert( 'Added!' );
+                } else {
+                  alert( 'Something went wrong!' );
+                }
+              });
+            };
+          } else {
+            addFav.style.color = '#ccc';
+            addFav.title = null;
+            addFav.onclick = function( e ) {
+              e.stopPropagation();
+            }
+          }
+
+          addFav.onmouseover = function(e) {
+            var that = this,
+            big = false;
+            gallery.throbber = setInterval( function() {
+              if ( !big ) {
+                that.style.fontSize = '3.9em';
+              } else {
+                that.style.fontSize = '4em';
+              }
+
+              big = !big;
+            },300);
+          };
+
+          addFav.onmouseout = function(e) {
+            clearInterval( gallery.throbber );
+            this.style.fontSize = '4em';
+          };
+
+          overlay.style.backgroundColor = 'black';
+          overlay.style.padding = '5px';
+          overlay.style.width = '100px';
+          overlay.style.height = '50px';
+          overlay.style.borderRadius = '5px';
+          overlay.style.position = 'fixed';
+          overlay.style.top = '4em';
+          overlay.style.left = '50%';
+          overlay.style.marginLeft = '-30px';
+
+          overlay.style.backgroundColor = 'rgba(0,0,0,0.1)';
+
+          overlay.onmouseover = function(e) {
+            var i, l;
+            this.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            for ( i = 0, l = this.children.length; i < l; i++ ) {
+              // this.children[i].style.display = 'block';
+              this.children[i].style.opacity = '1';
+            }
+          };
+
+          overlay.onmouseout = function(e) {
+            var i, l;
+            this.style.backgroundColor = 'rgba(0,0,0,0.1)';
+            for ( i = 0, l = this.children.length; i < l; i++ ) {
+              // this.children[i].style.display = 'none';
+              this.children[i].style.opacity = '0.01';
+            }
+          };
+
+          overlay.appendChild( back );
+          overlay.appendChild( addFav );
+          overlay.appendChild( forward );
+        },
+
+        opts = {
+          overlay: true,
+          resize: true,
+        };
     
         set = document.getElementsByClassName( 'pic' );
 
         for ( i = 0, l = set.length; i < l; i++ ) {
         images.push( set[i].firstChild.href );
+        pics[set[i].firstChild.href] = set[i].parentNode.id.split(/_/)[1];
         }
 
-        sggallery = new Gallery( images );
+        if ( options['addNewGalleryViewer_enOverlay'] === "false" ) {
+          opts.overlay = false;
+        }
+
+        if ( options['addNewGalleryViewer_enResize'] === "false" ) {
+          opts.resize = false;
+        }
+
+
+        sggallery = new Gallery( images, overlay_fn, opts );
 
         a.innerText = 'SGGallery';
         
@@ -402,7 +562,7 @@ var sg_helpers = {
         name: "addRemoveAllToFeed",
         desc: "Adds a remove-all button to the feeds page.",
         enabled: "true",
-        fn: function() {
+        fn: function( options ) {
             if ( window.location.pathname.match( /\/my\// ) ) {
                 var bt = document.getElementById( 'browserRight' ),
                 btn1 = document.createElement( 'button' ),
@@ -478,7 +638,7 @@ var sg_helpers = {
         name: "postButtonsEnhanced",
         desc: "Makes enhancements to the post/comment buttons.",
         enabled: "true",
-        fn: function() {
+        fn: function( options ) {
             var elems = document.getElementsByClassName('in');
             for( var i = 0; i < elems.length; i++ ) {
                 var elem = elems[i].getElementsByTagName('a')[0];
@@ -549,7 +709,6 @@ function size(obj) {
 }
 
 function enhancedInsertFormat( mode, method ) {
-    console.log('calling enhancedInsertFormat');
     if(!method)
         method="insertTarget"
     method=$(method);
@@ -572,32 +731,114 @@ function enhancedInsertFormat( mode, method ) {
     g.focus();
 }
 
-function check( name ) {
-    chrome.storage.sync.get( name, function( o ) {
+function imageToSGArray( img, pics ) {
+  var a = [], p = img.src.split( '/' );
+  a[0] = img.src;
+  a[1] = img.height;
+  a[2] = img.width;
+  a[3] = '';
+  a[4] = '';
+  a[5] = '';
+  a[6] = '';
+  a[7] = '';
+  a[8] = pics[img.src]; // need to figure out where to get this!
+  a[9] = '/girls/' + p[5];
+  return a;
+}
+
+function ajax( url, fn ) {
+    var req = new XMLHttpRequest();
+    req.open('GET', url, true);
+
+    req.onreadystatechange = function( data ) {
+      if ( req.readyState === 4 && req.status === 200 ) { 
+          fn.call( null, req.responseText );
+      }
+    }
+
+    req.send(null);
+}
+
+function check_opts( plugin, fn ) {
+  var o, opt, q = size( plugin.options ), count = 0, opt = {}, timer, 
+  plugin_opts = plugin.options,
+  f = function( name ) {
+    chrome.storage.sync.get( name, function( option ) {
+      opt[name] = option[name] || "true";
+      count++;
+    });
+  };
+
+  for ( o in plugin_opts ) {
+    if ( plugin_opts.hasOwnProperty( o ) ) {
+      f( plugin.name + '_' + plugin_opts[o].id );
+    }
+  }
+  timer = setInterval( function() {
+    if ( count === q ) {
+      clearInterval( timer );
+      fn.call( null, opt );
+    }
+  }, 50 );
+}
+
+function set_opt( helper, options ) {
+  var o, p;
+
+  for ( o in helper.options ) {
+    if ( helper.options.hasOwnProperty( o ) ) {
+      p = helper.name + '_' + helper.options[o].id;
+      if ( options[ p ] ) {
+        helper.options[ o ].enabled = options[p];
+      }
+    }
+  }
+}
+
+function check( plugin ) {
+  var name = plugin.name;
+  chrome.storage.sync.get( name, function( o ) {
     var a;
     if ( size(o) === 0 && sg_helpers[name].enabled !== "false") { 
-            sg_helpers[name].fn();
-            sg_helpers[name].enabled = "true";
-        } else {
-            for ( a in o ) {
+      if ( sg_helpers[name].options ) {
+        check_opts( plugin, function( options ) {
+          set_opt( sg_helpers[name], options );
+          sg_helpers[name].fn( options );
+          sg_helpers[name].enabled = "true";
+        });
+      } else {
+        sg_helpers[name].fn( {} );
+        sg_helpers[name].enabled = "true";
+      }
+    } else {
+      for ( a in o ) {
         if ( o.hasOwnProperty( a ) ) {
-        if ( o[a] === "true" )  {
-            sg_helpers[a].fn();
-            sg_helpers[a].enabled = "true";
-        } else {
-            sg_helpers[a].enabled = "false";
-        }
-        }
+          if ( o[a] === "true" )  {
+            if ( sg_helpers[a].options ) {
+              check_opts( plugin, function( options ) {
+                set_opt( sg_helpers[name], options );
+                sg_helpers[name].fn( options );
+                sg_helpers[name].enabled = "true";
+              });
+            } else {
+              sg_helpers[a].fn( {} );
+              sg_helpers[a].enabled = "true";
             }
+
+          } else {
+            sg_helpers[a].enabled = "false";
+          }
         }
-    });
+      }
+    }
+  });
 }
 
 (function(){
     var i,l, n;
     for ( n in sg_helpers ) {
         if ( sg_helpers.hasOwnProperty( n ) ) {
-            check( sg_helpers[n].name );
+            check( sg_helpers[n] );
         }
     }
 })();
