@@ -52,7 +52,7 @@ var Gallery = function ( imgs, overlay, options ) {
     if ( document.body ) {
         document.body.appendChild(this.bg);
     } else {
-	return;
+        return;
     }
 
     this.images = [];
@@ -65,7 +65,7 @@ var Gallery = function ( imgs, overlay, options ) {
 Gallery.prototype.addImages = function( imgs ) {
     var i, l, img;
     if ( imgs.length > 0 ) {
-	this.hasImages = true;
+        this.hasImages = true;
     }
     for (i = 0, l = imgs.length; i < l; i++) {
         img = new Image();
@@ -653,48 +653,73 @@ var sg_helpers = {
         name: "addSubMenus",
         desc: "Adds submenus to the main menus.",
         enabled: "true",
-        fn: function() {
-	    var menus = document.getElementsByClassName('menuTop')[0].getElementsByTagName('li');
-	    //var preventDefault = this.preventDefault();
-	    var links = ['<a href="/girls/#filter:true/filter:active/mode:suicidegirls">SUICIDE GIRLS</a><br /><a href="/girls/#filter:true/mode:hopefuls">HOPEFULS</a>',
-		'<a href="/albums/girls/">SETS OF THE DAY</a><br /><a href="/albums/hopefuls/">MEMBER REVIEW</a><br /><a href="/albums/girls/staff/">STAFF PICKS</a><br /><a href="/albums/remix/">REMIXES</a><br /><a href="/albums/misc/">MISC</a><br /><a href="/albums/hopefuls/queue/">MR QUEUE</a>',
-		'<a href="/videos/girls/">SUICIDEGIRLS</a><br /><a href="/videos/members/">MEMBERS</a>',
-		'',
-		'',
-		'<a href="/shop/all/">ALL ITEMS</a><br /><a href="/shop/women/">WOMEN\'S CLOTHES</a><br /><a href="/shop/men/">MEN\'S CLOTHES</a><br /><a href="/shop/media/">BOOKS, CD &amp; DVD</a><br /><a href="/shop/accessories/">ACCESSORIES</a>'];
+        fn: function( options ) {
+            var menus = document.getElementsByClassName('menuTop')[0].getElementsByTagName('li');
+            //var preventDefault = this.preventDefault();
+            var links = [[{"href": "/girls/#filter:true/filter:active/mode:suicidegirls","label":"SUICIDE GIRLS"},{"href":"/girls/#filter:true/mode:hopefuls","label":"HOPEFULS"}],
+                [{"href":"/albums/girls/","label":"SETS OF THE DAY"},{"href":"/albums/hopefuls/","label":"MEMBER REVIEW"},{"href":"/albums/girls/staff/","label":"STAFF PICKS"},{"href":"/albums/remix/","label":"REMIXES"},{"href":"/albums/misc/","label":"MISC"},{"href":"/albums/hopefuls/queue/","label":"MR QUEUE"}],
+                [{"href":"/videos/girls/","label":"SUICIDEGIRLS"},{"href":"/videos/members/","label":"MEMBERS"}],
+                [],
+                [],
+                [{"href":"/shop/all/","label":"ALL ITEMS"},{"href":"/shop/women/","label":"WOMEN'S CLOTHES"},{"href":"/shop/men/","label":"MEN'S CLOTHES"},{"href":"/shop/media/","label":"BOOKS, CD &amp; DVD"},{"href":"/shop/accessories/","label":"ACCESSORIES"}]];
 
-	    for( var i = 0; i < menus.length; i++ ) {
-		if(links[i].length == 0 )
-		    continue;
-		var elem = menus[i];
-		elem.linkRef = links[i];
-		console.log(elem);
-		elem.addEventListener('mouseover', function(e){
-		    e.cancelBubble = true;
-		    if(e.stopPropogation) e.stopPropogation();
-		    if( oldMenu = document.getElementById('sgc_sub_menu'))
-			oldMenu.parentNode.removeChild(oldMenu);
-		    var div = document.createElement('div');
-		    var target = e.target;
-		    div.id = 'sgc_sub_menu';
-		    div.style.width = '100px';
-		    div.style.backgroundColor = '#c0c0c0';
-		    div.style.position = 'absolute';
-		    div.style.left = target.offsetLeft+'px';
-		    div.style.top = (target.offsetTop + target.clientHeight) + 'px';
-		    div.innerHTML = target.linkRef;
-		    div.addEventListener('mouseout', function(e) {
-			var elem = document.getElementById('sgc_sub_menu');
-			if( e.target.parentNode == elem ) //ignore for child
-			    return;
-			elem.parentNode.removeChild(elem);
-		    }, false);
+            console.log(links);
+            for( var i = 0; i < menus.length; i++ ) {
+                //if(links[i].length == 0 )
+                    //continue;
+                var elem = menus[i];
+                elem.linkRef = links[i];
+                console.log(elem);
+                elem.addEventListener('mouseover', function(e){
+                    //e.cancelBubble = true;
+                    //if(e.stopPropogation) e.stopPropogation();
+                    if( oldMenu = document.getElementById('sgc_sub_menu'))
+                        oldMenu.parentNode.removeChild(oldMenu);
+                    //if( e.target.tagName != 'LI' )
+                        //return;
+                    var target = ( e.target.tagName == 'A' ? e.target.parentNode : e.target );
+                    //console.log(target.linkRef);
+                    if( target.linkRef.length == 0 )
+                        return;
+                    var div = document.createElement('div');
+                    div.id = 'sgc_sub_menu';
+                    div.style.width = '100px';
+                    div.style.backgroundColor = '#c0c0c0';
+                    div.style.position = 'absolute';
+                    div.style.left = target.offsetLeft+'px';
+                    div.style.top = (target.offsetTop + target.clientHeight) + 'px';
+                    for( var n = 0; n < target.linkRef.length; n++ ) {
+                        var link = target.linkRef[n];
+                        var a = document.createElement('a');
+                        a.href = link.href;
+                        a.innerHTML = link.label;
+                        a.style.margin = '2px';
+                        a.style.display = 'block';
+                        div.appendChild(a);
+                    }
+                    div.addEventListener('mouseout', function(e) {
+                        //e.cancelBubble = true;
+                        //if(e.stopPropogation) e.stopPropogation();
+                        var elem = document.getElementById('sgc_sub_menu');
+                        //if( e.target == elem ) //ignore for child
+                            //return;
+                        var pn = e.relatedTarget;
+                        while( pn = pn.parentNode ) {
+                            console.log(pn);
+                            if( pn == elem ) {
+                                return;
+                            } else if ( pn.tagName == 'body') {
+                                elem.parentNode.removeChild(elem);
+                                return;
+                            }
+                        }
+                    }, false);
 
-		    document.body.appendChild(div);
-		}, false);
-	    }
+                    document.body.appendChild(div);
+                }, false);
+            }
 
-	}
+        }
     }
 };
 
