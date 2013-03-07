@@ -488,6 +488,53 @@ var sg_helpers = {
             scriptElem.innerHTML = enhancedInsertFormat.toString();
             document.body.appendChild(scriptElem);
         }
+    },
+    "addSubMenus": {
+        name: "addSubMenus",
+        desc: "Adds submenus to the main menus.",
+        enabled: "true",
+        fn: function() {
+	    var menus = document.getElementsByClassName('menuTop')[0].getElementsByTagName('li');
+	    //var preventDefault = this.preventDefault();
+	    var links = ['<a href="/girls/#filter:true/filter:active/mode:suicidegirls">SUICIDE GIRLS</a><br /><a href="/girls/#filter:true/mode:hopefuls">HOPEFULS</a>',
+		'<a href="/albums/girls/">SETS OF THE DAY</a><br /><a href="/albums/hopefuls/">MEMBER REVIEW</a><br /><a href="/albums/girls/staff/">STAFF PICKS</a><br /><a href="/albums/remix/">REMIXES</a><br /><a href="/albums/misc/">MISC</a><br /><a href="/albums/hopefuls/queue/">MR QUEUE</a>',
+		'<a href="/videos/girls/">SUICIDEGIRLS</a><br /><a href="/videos/members/">MEMBERS</a>',
+		'',
+		'',
+		'<a href="/shop/all/">ALL ITEMS</a><br /><a href="/shop/women/">WOMEN\'S CLOTHES</a><br /><a href="/shop/men/">MEN\'S CLOTHES</a><br /><a href="/shop/media/">BOOKS, CD &amp; DVD</a><br /><a href="/shop/accessories/">ACCESSORIES</a>'];
+
+	    for( var i = 0; i < menus.length; i++ ) {
+		if(links[i].length == 0 )
+		    continue;
+		var elem = menus[i];
+		elem.linkRef = links[i];
+		console.log(elem);
+		elem.addEventListener('mouseover', function(e){
+		    e.cancelBubble = true;
+		    if(e.stopPropogation) e.stopPropogation();
+		    if( oldMenu = document.getElementById('sgc_sub_menu'))
+			oldMenu.parentNode.removeChild(oldMenu);
+		    var div = document.createElement('div');
+		    var target = e.target;
+		    div.id = 'sgc_sub_menu';
+		    div.style.width = '100px';
+		    div.style.backgroundColor = '#c0c0c0';
+		    div.style.position = 'absolute';
+		    div.style.left = target.offsetLeft+'px';
+		    div.style.top = (target.offsetTop + target.clientHeight) + 'px';
+		    div.innerHTML = target.linkRef;
+		    div.addEventListener('mouseout', function(e) {
+			var elem = document.getElementById('sgc_sub_menu');
+			if( e.target.parentNode == elem ) //ignore for child
+			    return;
+			elem.parentNode.removeChild(elem);
+		    }, false);
+
+		    document.body.appendChild(div);
+		}, false);
+	    }
+
+	}
     }
 };
 
