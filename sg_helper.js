@@ -563,7 +563,7 @@ var sg_helpers = {
         desc: "Adds a remove-all button to the feeds page.",
         enabled: "true",
         fn: function( options ) {
-            if ( window.location.pathname.match( /\/my\// ) ) {
+            if ( window.location.pathname.match( /\/my\/$/ ) ) {
                 var bt = document.getElementById( 'browserRight' ),
                 btn1 = document.createElement( 'button' ),
                 btn2 = document.createElement( 'button' ),
