@@ -655,7 +655,6 @@ var sg_helpers = {
         enabled: "true",
         fn: function( options ) {
             var menus = document.getElementsByClassName('menuTop')[0].getElementsByTagName('li');
-            //var preventDefault = this.preventDefault();
             var links = [[{"href": "/girls/#filter:true/filter:active/mode:suicidegirls","label":"SUICIDE GIRLS"},{"href":"/girls/#filter:true/mode:hopefuls","label":"HOPEFULS"}],
                 [{"href":"/albums/girls/","label":"SETS OF THE DAY"},{"href":"/albums/hopefuls/","label":"MEMBER REVIEW"},{"href":"/albums/girls/staff/","label":"STAFF PICKS"},{"href":"/albums/remix/","label":"REMIXES"},{"href":"/albums/misc/","label":"MISC"},{"href":"/albums/hopefuls/queue/","label":"MR QUEUE"}],
                 [{"href":"/videos/girls/","label":"SUICIDEGIRLS"},{"href":"/videos/members/","label":"MEMBERS"}],
@@ -663,23 +662,14 @@ var sg_helpers = {
                 [],
                 [{"href":"/shop/all/","label":"ALL ITEMS"},{"href":"/shop/women/","label":"WOMEN'S CLOTHES"},{"href":"/shop/men/","label":"MEN'S CLOTHES"},{"href":"/shop/media/","label":"BOOKS, CD &amp; DVD"},{"href":"/shop/accessories/","label":"ACCESSORIES"}]];
 
-            console.log(links);
             for( var i = 0; i < menus.length; i++ ) {
-                //if(links[i].length == 0 )
-                    //continue;
                 var elem = menus[i];
                 elem.linkRef = links[i];
-                console.log(elem);
                 elem.addEventListener('mouseover', function(e){
-                    //e.cancelBubble = true;
-                    //if(e.stopPropogation) e.stopPropogation();
                     if( oldMenu = document.getElementById('sgc_sub_menu'))
                         oldMenu.parentNode.removeChild(oldMenu);
-                    //if( e.target.tagName != 'LI' )
-                        //return;
                     var target = ( e.target.tagName == 'A' ? e.target.parentNode : e.target );
-                    //console.log(target.linkRef);
-                    if( target.linkRef.length == 0 )
+                    if( target.linkRef.length == 0 ) // If this menu doesn't have a submenu, exit
                         return;
                     var div = document.createElement('div');
                     div.id = 'sgc_sub_menu';
@@ -698,20 +688,15 @@ var sg_helpers = {
                         div.appendChild(a);
                     }
                     div.addEventListener('mouseout', function(e) {
-                        //e.cancelBubble = true;
-                        //if(e.stopPropogation) e.stopPropogation();
                         var elem = document.getElementById('sgc_sub_menu');
                         if( elem == null ) return; // if the menu doesn't exist, exit
                         if( e.target.parentNode == elem ) //ignore for child
                             return;
                         var pn = e.relatedTarget;
-                        console.log('target is ',e.target);
                         while( pn = pn.parentNode ) {
-                            console.log(pn);
                             if( pn == elem ) {
                                 return;
                             } else if ( pn.tagName == 'BODY') {
-                                console.log('body found and exiting');
                                 elem.parentNode.removeChild(elem);
                                 return;
                             }
