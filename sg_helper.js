@@ -684,7 +684,7 @@ var sg_helpers = {
                     var div = document.createElement('div');
                     div.id = 'sgc_sub_menu';
                     div.style.width = '100px';
-                    div.style.backgroundColor = '#c0c0c0';
+                    div.style.backgroundColor = '#efefd7';
                     div.style.position = 'absolute';
                     div.style.left = target.offsetLeft+'px';
                     div.style.top = (target.offsetTop + target.clientHeight) + 'px';
@@ -701,14 +701,17 @@ var sg_helpers = {
                         //e.cancelBubble = true;
                         //if(e.stopPropogation) e.stopPropogation();
                         var elem = document.getElementById('sgc_sub_menu');
-                        //if( e.target == elem ) //ignore for child
-                            //return;
+                        if( elem == null ) return; // if the menu doesn't exist, exit
+                        if( e.target.parentNode == elem ) //ignore for child
+                            return;
                         var pn = e.relatedTarget;
+                        console.log('target is ',e.target);
                         while( pn = pn.parentNode ) {
                             console.log(pn);
                             if( pn == elem ) {
                                 return;
-                            } else if ( pn.tagName == 'body') {
+                            } else if ( pn.tagName == 'BODY') {
+                                console.log('body found and exiting');
                                 elem.parentNode.removeChild(elem);
                                 return;
                             }
