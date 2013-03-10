@@ -315,21 +315,22 @@ var sg_helpers = {
     }
     }
 },
-    "addVideoDownloadLink": {
-        name: "addVideoDownloadLink",
-        desc: "Adds a download video link to the video description page.",
+    "replaceVideoPlayer": {
+        name: "replaceVideoPlayer",
+        desc: "Replaces the flash video player with HTML5 video tag. ( allowing for full screen! )",
         enabled: "true",
         fn: function( options ) {
             if ( window.location.pathname.match( /\/videos\// ) ) {
                 var params = document.getElementsByTagName( 'param' ), i, l,
-                si = document.getElementsByClassName( 'setInfo' ),
-                a = document.createElement( 'a' );
+		curVid = document.getElementById('player'),
+                lc = document.getElementById( 'leftCol' ),
+		vid = document.createElement('video' );
 
-                for ( i = 0, l = si.length; i < l; i++ ) {
-                    if ( si[i].id && si[i].id.match( /video/i ) ) {
-                        si = si[i];
-                    }
-                }
+		vid.style.width = '100%';
+		vid.style.height = '100%';
+
+		vid.setAttribute( 'controls', 'controls' );
+
 
                 for ( i = 0, l = params.length; i < l; i++ ) {
                     if ( params[i] && params[i].name && params[i].name === 'href' ) {
@@ -337,12 +338,51 @@ var sg_helpers = {
                     }
                 }
 
-                if ( ! params.length && ! si.length ) { 
-                    a.href = params.getAttribute( 'value' );
-                    a.innerText = 'Download Video';
+                if ( ! params.length ) { 
+			curVid.remove();
+                    vid.src = params.getAttribute( 'value' );
 
-                    si.appendChild( a );
+		    lc.style.marginTop = '6px';
+		    lc.style.height = '330px';
+		    lc.style.borderRadius = '5px';
+		    lc.style.backgroundColor = 'black';
+		    lc.style.backgroundImage = 'none';
+
+                    lc.appendChild( vid );
                 }
+            }
+        }
+    },
+    "addVideoDownloadLink": {
+        name: "addVideoDownloadLink",
+        desc: "Adds a download video link to the video description page. ( <b>does not run if replaceVideoPlayer is active!</b> )",
+        enabled: "true",
+        fn: function( options ) {
+            if ( window.location.pathname.match( /\/videos\// ) ) {
+                var params = document.getElementsByTagName( 'param' ), i, l,
+                si = document.getElementsByClassName( 'setInfo' ),
+                a = document.createElement( 'a' );
+
+		if ( params ) {
+			for ( i = 0, l = si.length; i < l; i++ ) {
+			    if ( si[i].id && si[i].id.match( /video/i ) ) {
+				si = si[i];
+			    }
+			}
+
+			for ( i = 0, l = params.length; i < l; i++ ) {
+			    if ( params[i] && params[i].name && params[i].name === 'href' ) {
+				params = params[i];
+			    }
+			}
+
+			if ( ! params.length && ! si.length ) { 
+			    a.href = params.getAttribute( 'value' );
+			    a.innerText = 'Download Video';
+
+			    si.appendChild( a );
+			}
+		}
             }
         }
     },
