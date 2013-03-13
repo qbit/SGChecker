@@ -723,24 +723,24 @@ var sg_helpers = {
                         var a = document.createElement('a');
                         a.href = link.href;
                         a.innerHTML = link.label;
-                        a.style.margin = '2px';
+                        a.style.margin = '3px';
                         a.style.display = 'block';
                         div.appendChild(a);
                     }
                     div.addEventListener('mouseout', function(e) {
                         var elem = document.getElementById('sgc_sub_menu');
-                        if( elem == null ) return; // if the menu doesn't exist, exit
-                        if( e.target.parentNode == elem ) //ignore for child
-                            return;
+                        if( elem == null ) {
+                            return; // if the menu doesn't exist, exit
+                        }
                         var pn = e.relatedTarget;
-                        while( pn = pn.parentNode ) {
+                        do {
                             if( pn == elem ) {
                                 return;
                             } else if ( pn.tagName == 'BODY') {
                                 elem.parentNode.removeChild(elem);
                                 return;
                             }
-                        }
+                        } while( pn = pn.parentNode );
                     }, false);
 
                     document.body.appendChild(div);
