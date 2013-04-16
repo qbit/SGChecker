@@ -68,7 +68,8 @@ Gallery.prototype.addImages = function( imgs ) {
         this.hasImages = true;
     }
     for (i = 0, l = imgs.length; i < l; i++) {
-        img = new Image();
+        // img = new Image();
+        img = document.createElement('img');
         img.src = imgs[i];
         img.style.width = "100%";
         img.style.height = "auto";
