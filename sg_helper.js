@@ -351,27 +351,27 @@ var sg_helpers = {
     desc: "Replaces the standard HTML gallery with SGGallery.",
     enabled: "true",
     fn: function( options ) {
-    var set, i, l, images = [];
-    if ( ! sggallery.hasImages ) {
-        set = document.getElementsByClassName( 'pic' );
+        var set, i, l, images = [];
+        if ( ! sggallery.hasImages ) {
+            set = document.getElementsByClassName( 'pic' );
 
-        for ( i = 0, l = set.length; i < l; i++ ) {
-        images.push( set[i].firstChild.href );
+            for ( i = 0, l = set.length; i < l; i++ ) {
+            images.push( set[i].firstChild.href );
+            }
+
+            sggallery.addImages( images );
         }
 
-        sggallery.addImages( images );
-    }
+        function makeLink( idx ) {
+            return function( e ) {
+            sggallery.start( idx );
+            return false;
+            };
+        }
 
-    function makeLink( idx ) {
-        return function( e ) {
-        sggallery.start( idx );
-        return false;
-        };
-    }
-
-    for ( i = 0, l = set.length; i < l; i++ ) {
-        set[i].firstChild.onclick = makeLink( i );
-    }
+        for ( i = 0, l = set.length; i < l; i++ ) {
+            set[i].firstChild.onclick = makeLink( i );
+        }
     }
 },
 "addNewGalleryViewer": {
@@ -390,6 +390,12 @@ var sg_helpers = {
         "name": "Enable Overlay",
         "desc": "Enable the image overlay that displays next / previous / <3",
         "enabled": true
+      },
+      "replacePopup": {
+        "id" : "enReplacePopup",
+        "name": "Replace Popup",
+        "desc": "Replace the default image popup viewer for posts",
+        "enabled": true
       }
     },
     fn: function( options ) {
@@ -401,36 +407,44 @@ var sg_helpers = {
         li = document.createElement( 'li' ), i, l, set, gal, images = [], pics = {},
         overlay_fn = function( overlay, gallery ) {
           var back = document.createElement( 'div' ),
-          forward = document.createElement( 'div' ),
-          addFav = document.createElement( 'div' );
+            forward = document.createElement( 'div' ),
+            addFav = document.createElement( 'div' ),
+            resize = document.createElement( 'div' );
 
           back.innerText = '⬅';
           forward.innerText = '➡';
           addFav.innerText = '♥';
+          resize.innerText = '☒';
 
           back.style.float = 'left';
           forward.style.float = 'left';
           addFav.style.float = 'left';
+          resize.style.float = 'left';
 
           back.style.color = 'white';
           forward.style.color = 'white';
           addFav.style.color = '#b7115c';
+          resize.style.color = 'white';
 
           back.style.fontSize = '4em';
           forward.style.fontSize = '4em';
           addFav.style.fontSize = '4em';
+          resize.style.fontSize = '4em';
 
           back.style.cursor = 'pointer';
           forward.style.cursor = 'pointer';
           addFav.style.cursor = 'pointer';
+          resize.style.cursor = 'pointer';
 
           back.title = 'back';
           forward.title = 'forward';
           addFav.title = 'Add to favorite images';
+          resize.title = 'Toggle fit to page';
 
           back.style.opacity = '0.1';
           forward.style.opacity = '0.1';
           addFav.style.opacity = '0.1';
+          resize.style.opacity = '0.1';
 
           back.onclick = function( e ) {
             e.stopPropagation();
@@ -440,6 +454,16 @@ var sg_helpers = {
           forward.onclick = function( e ) {
             e.stopPropagation();
             gallery.show(null, false);
+          };
+          
+          resize.onclick = function( e ) {
+            e.stopPropagation();
+            console.log( gallery.options );
+            // toggle resize option
+            gallery.options.resize = !gallery.options.resize;
+            gallery.show(gallery.current_idx, false);
+            console.log( gallery.options );
+            // do resize
           };
 
           if ( window.location.pathname.match( /girls\/.*\/photos/ ) ) {
@@ -485,13 +509,14 @@ var sg_helpers = {
 
           overlay.style.backgroundColor = 'black';
           overlay.style.padding = '5px';
-          overlay.style.width = '100px';
+          overlay.style.width = '160px';
           overlay.style.height = '50px';
           overlay.style.borderRadius = '5px';
           overlay.style.position = 'fixed';
           overlay.style.top = '4em';
           overlay.style.left = '50%';
-          overlay.style.marginLeft = '-30px';
+          overlay.style.marginLeft = '-60px';
+          overlay.style.whiteSpace = 'nowrap';
 
           overlay.style.backgroundColor = 'rgba(0,0,0,0.1)';
 
@@ -515,27 +540,28 @@ var sg_helpers = {
 
           overlay.appendChild( back );
           overlay.appendChild( addFav );
+          overlay.appendChild( resize );
           overlay.appendChild( forward );
         },
 
         opts = {
-          overlay: true,
-          resize: true,
+            overlay: true,
+            resize: true,
         };
     
         set = document.getElementsByClassName( 'pic' );
 
         for ( i = 0, l = set.length; i < l; i++ ) {
-        images.push( set[i].firstChild.href );
-        pics[set[i].firstChild.href] = set[i].parentNode.id.split(/_/)[1];
+            images.push( set[i].firstChild.href );
+            pics[set[i].firstChild.href] = set[i].parentNode.id.split(/_/)[1];
         }
 
         if ( options['addNewGalleryViewer_enOverlay'] === "false" ) {
-          opts.overlay = false;
+            opts.overlay = false;
         }
 
         if ( options['addNewGalleryViewer_enResize'] === "false" ) {
-          opts.resize = false;
+            opts.resize = false;
         }
 
 
@@ -546,7 +572,7 @@ var sg_helpers = {
         a.setAttribute('href','#');
 
         a.onclick = function() { 
-        sggallery.start();
+            sggallery.start();
         };
 
         li.appendChild( a );
