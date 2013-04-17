@@ -128,6 +128,20 @@ Gallery.prototype.show = function (idx, back) {
     this.current_img = img;
 
     if (img) {
+        document.body.addEventListener('keyup', function (e) {
+            e.preventDefault();
+            document.body.removeEventListener('keyup', arguments.callee, true);
+            var bt = e.keyCode || e.charCode;
+            if (bt === 39) {
+                self.show(null, false);
+            }
+            if (bt === 37) {
+                self.show(null, true);
+            }
+            if (bt === 27) {
+                self.stop();
+            }
+        }, true);
         img.addEventListener('mousedown', function (e) {
             e.preventDefault();
             img.removeEventListener('mousedown', arguments.callee, true);
