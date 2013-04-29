@@ -515,7 +515,7 @@ var sg_helpers = {
           overlay.style.position = 'fixed';
           overlay.style.top = '4em';
           overlay.style.left = '50%';
-          overlay.style.marginLeft = '-60px';
+          overlay.style.marginLeft = '-80px';
           overlay.style.whiteSpace = 'nowrap';
 
           overlay.style.backgroundColor = 'rgba(0,0,0,0.1)';
