@@ -60,6 +60,10 @@ var Gallery = function ( imgs, overlay, options ) {
     this.hasImages = false;
     this.addImages( imgs );
 
+    window.addEventListener('resize', function() {
+        self.show(null, -1);
+    });
+
     return this;
 };
 Gallery.prototype.addImages = function( imgs ) {
@@ -102,16 +106,12 @@ Gallery.prototype.clear = function () {
     }
 };
 Gallery.prototype.getImage = function (rev) {
-    var img;
-
-    if (!rev) {
-        img = this.images[this.count] || null;
+    if ( rev === false )
         this.count++;
-    } else {
-        img = this.images[this.count - 2] || null;
+    if ( rev === true )
         this.count--;
-    }
-    return img;
+    // If it's neither true/false, return current image
+    return this.images[this.count - 1] || null;
 };
 Gallery.prototype.show = function (idx, back) {
     var self = this,
@@ -124,7 +124,7 @@ Gallery.prototype.show = function (idx, back) {
     }
 
     img = this.getImage(back);
-
+    
     this.current_img = img;
 
     if (img) {
@@ -158,16 +158,15 @@ Gallery.prototype.show = function (idx, back) {
         }, true);
 
         if ( this.options.resize ) {
-          scaleX = ( (document.body.clientWidth-marginAdjust) < img.width ? (document.body.clientWidth-marginAdjust)/img.width : 1);
-          scaleY = ( (document.body.clientHeight-marginAdjust) < img.height ? (document.body.clientHeight-marginAdjust)/img.height : 1);
+            scaleX = ( (document.body.clientWidth-marginAdjust) < img.naturalWidth ? (document.body.clientWidth-marginAdjust)/img.naturalWidth : 1);
+            scaleY = ( (document.body.clientHeight-marginAdjust) < img.naturalHeight ? (document.body.clientHeight-marginAdjust)/img.naturalHeight : 1);
 
-          if( scaleX < 1 || scaleY < 1 ) {
-              scale = (scaleX < scaleY ? scaleX : scaleY);
-          }
-
-          img.style.height = (img.height*scale)+'px';
-          img.style.width = (img.width*scale)+'px';
+            if( scaleX < 1 || scaleY < 1 ) {
+                scale = (scaleX < scaleY ? scaleX : scaleY);
+            }
         }
+        img.style.height = (img.naturalHeight*scale)+'px';
+        img.style.width = (img.naturalWidth*scale)+'px';
 
         this.clear();
 
@@ -513,12 +512,10 @@ var sg_helpers = {
           
           resize.onclick = function( e ) {
             e.stopPropagation();
-            console.log( gallery.options );
+            
             // toggle resize option
             gallery.options.resize = !gallery.options.resize;
-            gallery.show(gallery.current_idx, false);
-            console.log( gallery.options );
-            // do resize
+            gallery.show(null, -1);
           };
 
           if ( window.location.pathname.match( /girls\/.*\/photos/ ) ) {
