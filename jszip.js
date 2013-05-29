@@ -8,7 +8,7 @@ Dual licenced under the MIT license or GPLv3. See LICENSE.markdown.
 
 Usage:
    zip = new JSZip();
-   zip.file("hello.txt", "Hello, World!").add("tempfile", "nothing");
+   zip.file("hello.txt", "Hello, World!").file("tempfile", "nothing");
    zip.folder("images").file("smile.gif", base64Data, {base64: true});
    zip.file("Xmas.txt", "Ho ho ho !", {date : new Date("December 25, 2007 00:00:01")});
    zip.remove("tempfile");
@@ -53,7 +53,8 @@ JSZip.defaults = {
    base64: false,
    binary: false,
    dir: false,
-   date: null
+   date: null,
+   compression: null
 };
 
 
@@ -78,6 +79,9 @@ JSZip.prototype = (function () {
        */
       asText : function () {
          var result = this.data;
+         if (result === null || typeof result === "undefined") {
+            return "";
+         }
          if (this.options.base64) {
             result = JSZipBase64.decode(result);
          }
@@ -92,6 +96,9 @@ JSZip.prototype = (function () {
        */
       asBinary : function () {
          var result = this.data;
+         if (result === null || typeof result === "undefined") {
+            return "";
+         }
          if (this.options.base64) {
             result = JSZipBase64.decode(result);
          }
@@ -164,6 +171,7 @@ JSZip.prototype = (function () {
       }
       o = extend(o, JSZip.defaults);
       o.date = o.date || new Date();
+      if (o.compression !== null) o.compression = o.compression.toUpperCase();
 
       return o;
    };
@@ -185,7 +193,11 @@ JSZip.prototype = (function () {
 
       o = prepareFileAttrs(o);
 
-      if (JSZip.support.uint8array && data instanceof Uint8Array) {
+      if (o.dir || data === null || typeof data === "undefined") {
+         o.base64 = false;
+         o.binary = false;
+         data = null;
+      } else if (JSZip.support.uint8array && data instanceof Uint8Array) {
          o.base64 = false;
          o.binary = true;
          data = JSZip.utils.uint8Array2String(data);
@@ -243,7 +255,7 @@ JSZip.prototype = (function () {
             folderAdd.call(this, parent);
          }
 
-         fileAdd.call(this, name, '', {dir:true});
+         fileAdd.call(this, name, null, {dir:true});
       }
       return this.files[name];
    };
@@ -281,8 +293,15 @@ JSZip.prototype = (function () {
       dosDate = dosDate << 5;
       dosDate = dosDate | o.date.getDate();
 
+      var hasData = data !== null && data.length !== 0;
+
+      compressionType = o.compression || compressionType;
+      if (!JSZip.compressions[compressionType]) {
+         throw compressionType + " is not a valid compression method !";
+      }
+
       var compression    = JSZip.compressions[compressionType];
-      var compressedData = compression.compress(data);
+      var compressedData = hasData ? compression.compress(data) : '';
 
       var header = "";
 
@@ -292,17 +311,17 @@ JSZip.prototype = (function () {
       // set bit 11 if utf8
       header += useUTF8 ? "\x00\x08" : "\x00\x00";
       // compression method
-      header += compression.magic;
+      header += hasData ? compression.magic : JSZip.compressions['STORE'].magic;
       // last mod file time
       header += decToHex(dosTime, 2);
       // last mod file date
       header += decToHex(dosDate, 2);
       // crc-32
-      header += decToHex(this.crc32(data), 4);
+      header += hasData ? decToHex(this.crc32(data), 4) : '\x00\x00\x00\x00';
       // compressed size
-      header += decToHex(compressedData.length, 4);
+      header += hasData ? decToHex(compressedData.length, 4) : '\x00\x00\x00\x00';
       // uncompressed size
-      header += decToHex(data.length, 4);
+      header += hasData ? decToHex(data.length, 4) : '\x00\x00\x00\x00';
       // file name length
       header += decToHex(utfEncodedFileName.length, 2);
       // extra field length
@@ -456,12 +475,12 @@ JSZip.prototype = (function () {
          });
          var compression = options.compression.toUpperCase();
 
-         // The central directory, and files data
-         var directory = [], files = [], fileOffset = 0;
-
          if (!JSZip.compressions[compression]) {
             throw compression + " is not a valid compression method !";
          }
+
+         // The central directory, and files data
+         var directory = [], files = [], fileOffset = 0;
 
          for (var name in this.files) {
             if ( !this.files.hasOwnProperty(name) ) { continue; }
@@ -647,7 +666,6 @@ JSZip.prototype = (function () {
        * http://www.webtoolkit.info/javascript-utf8.html
        */
       utf8encode : function (string) {
-         string = string.replace(/\r\n/g,"\n");
          var utftext = "";
 
          for (var n = 0; n < string.length; n++) {

@@ -11,7 +11,7 @@
 	"content_scripts": [
 		{
 			"matches": [ "https://*.suicidegirls.com/*", "http://*.suicidegirls.com/*" ],
-			"js": [ "sg_helper.js", "jszip.js" ]
+			"js": [ "sg_inject.js", "jszip.js", "addSetDownloadLink.js" ]
 		}
 	],
 	"icons": {
@@ -20,8 +20,19 @@
 	"name": "SGChecker",
 	"options_page": "options.html",
 	"permissions": [ "tabs", "http://*.suicidegirls.com/*", "https://*.suicidegirls.com/*", "notifications", "storage" ],
-  "web_accessible_resources": [
-    "icon_48.png"
-  ],
+	"web_accessible_resources": [
+		"icon_48.png",
+		"sg_inject.js",
+		"Gallery.js",
+		"addSetDownloadLink.js",
+		"addNameToImage.js",
+		"replaceVideoPlayer.js",
+		"addVideoDownloadLink.js",
+		"addNewGalleryViewer.js",
+		"replaceHTMLGallery.js",
+		"postButtonsEnhanced.js",
+		"addSubMenus.js",
+		"addRemoveAllToFeed.js"
+	],
 	"version": "3.2.17"
 }
