@@ -1,0 +1,1 @@
+rsync -av --progress --exclude SG_Background.xcf --exclude SG_Background.png --exclude SGChecker.crx --exclude options_shot.png --exclude .git --exclude publish.sh --delete ~/Development/SGChecker_src/ ~/Development/SGChecker/
