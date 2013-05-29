@@ -3,8 +3,8 @@ window.onload = function() {
 
 	var i, l, ii, opt;
 	setTimeout( function() {
-		for ( i in sg_helpers ) {
-			var script = sg_helpers[i];
+		for ( i in plugins ) {
+			var script = plugins[i];
 			var table = document.getElementById( 'scripts' );
 			var tr = document.createElement( 'tr' );
 			var inp = document.createElement( 'input' );

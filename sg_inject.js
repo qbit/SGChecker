@@ -10,7 +10,7 @@ var p, plugins = {
 	"addSetDownloadLink": {
 		name: "addSetDownloadLink",
 		desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
-		enabled: "true"
+		enabled: "false"
 	},
 	"replaceVideoPlayer": {
 		name: "replaceVideoPlayer",
@@ -25,7 +25,7 @@ var p, plugins = {
 	"replaceHTMLGallery": {
 		name: "replaceHTMLGallery",
 		desc: "Replaces the standard HTML gallery with SGGallery.",
-		enabled: "true"
+		enabled: "false"
 	},
 	"addNewGalleryViewer": {
 		name: "addNewGalleryViewer",
@@ -135,16 +135,18 @@ function inject( file ) {
 }
 
 function load_plugin( plugin, options ) {
-	os = document.createElement('script'), 
-	o = 'var ' + plugin.name;
+	if ( ! window.location.href.match( 'chrome-extension' ) ) {
+		os = document.createElement('script'), 
+		o = 'var ' + plugin.name;
 
-	o += ' = ' + JSON.stringify(options);
+		o += ' = ' + JSON.stringify(options);
 
-	os.innerHTML = o;
+		os.innerHTML = o;
 
-	inject( plugin.name + '.js' );
+		inject( plugin.name + '.js' );
 
-	(document.head||document.documentElement).appendChild(os);
+		(document.head||document.documentElement).appendChild(os);
+	}
 }
 
 function check( plugin ) {
