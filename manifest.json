@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"browser_action": {
-		"default_title": "SGChecker v3.3.1",
+		"default_title": "SGChecker v4.0.0",
 		"default_icon": "sg_not_in.png"
 	},
 	"background": {
@@ -32,7 +32,8 @@
 		"replaceHTMLGallery.js",
 		"postButtonsEnhanced.js",
 		"addSubMenus.js",
+		"loadMyGroups.js",
 		"addRemoveAllToFeed.js"
 	],
-	"version": "3.3.1"
+	"version": "4.0.0"
 }

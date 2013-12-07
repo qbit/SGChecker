@@ -2,71 +2,76 @@
 // injected
 
 var p, plugins = {
-	"addNameToImage": { 
-		name: "addNameToImage", 
-		desc: "Adds girl name / album name to the alt tag of an image for easy set identification from group posts, boards.",
-		enabled: "true"
-	},
-	"addSetDownloadLink": {
-		name: "addSetDownloadLink",
-		desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
-		enabled: "false"
-	},
-	"replaceVideoPlayer": {
-		name: "replaceVideoPlayer",
-		desc: "Replaces the flash video player with HTML5 video tag. ( allowing for full screen! )",
-		enabled: "true"
-	},
-	"addVideoDownloadLink": {
-		name: "addVideoDownloadLink",
-		desc: "Adds a download video link to the video description page. ( <b>does not run if replaceVideoPlayer is active!</b> )",
-		enabled: "true"
-	},
-	"replaceHTMLGallery": {
-		name: "replaceHTMLGallery",
-		desc: "Replaces the standard HTML gallery with SGGallery.",
-		enabled: "false"
-	},
-	"addNewGalleryViewer": {
-		name: "addNewGalleryViewer",
-		desc: "Adds an alternative gallery viewer with Right / Left mouse button navigation.",
-		enabled: "true",
-		options: {
-			"resize": {
-				"id" : "enResize",
-				"name": "Enable Resize",
-				"desc": "Automatically resize images based on screen size",
-				"enabled": true
-			},
-			"overlay": {
-				"id" : "enOverlay",
-				"name": "Enable Overlay",
-				"desc": "Enable the image overlay that displays next / previous / <3",
-				"enabled": true
-			},
-			"replacePopup": {
-				"id" : "enReplacePopup",
-				"name": "Replace Popup",
-				"desc": "Replace the default image popup viewer for posts",
-				"enabled": true
-			}
-		}
-	},
-	"addRemoveAllToFeed": {
-		name: "addRemoveAllToFeed",
-		desc: "Adds a remove-all button to the feeds page.",
-		enabled: "true"
-	},
-	"postButtonsEnhanced": {
-		name: "postButtonsEnhanced",
-		desc: "Makes enhancements to the post/comment buttons.",
-		enabled: "true"
-	},
-	"addSubMenus": {
-		name: "addSubMenus",
-		desc: "Adds submenus to the main menus.",
+	// "addNameToImage": { 
+	// 	name: "addNameToImage", 
+	// 	desc: "Adds girl name / album name to the alt tag of an image for easy set identification from group posts, boards.",
+	// 	enabled: "true"
+	// },
+	// "addSetDownloadLink": {
+	// 	name: "addSetDownloadLink",
+	// 	desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
+	// 	enabled: "false"
+	// },
+	"loadMyGroups": {
+		name: "loadMyGroups",
+		desc: "Make clicking 'GROUPS' always load 'MY GROUPS' instead of 'PUBLIC GROUPS",
 		enabled: "true"
 	}
+	// "replaceVideoPlayer": {
+	// 	name: "replaceVideoPlayer",
+	// 	desc: "Replaces the flash video player with HTML5 video tag. ( allowing for full screen! )",
+	// 	enabled: "true"
+	// },
+	// "addVideoDownloadLink": {
+	// 	name: "addVideoDownloadLink",
+	// 	desc: "Adds a download video link to the video description page. ( <b>does not run if replaceVideoPlayer is active!</b> )",
+	// 	enabled: "true"
+	// },
+	// "replaceHTMLGallery": {
+	// 	name: "replaceHTMLGallery",
+	// 	desc: "Replaces the standard HTML gallery with SGGallery.",
+	// 	enabled: "false"
+	// },
+	// "addNewGalleryViewer": {
+	// 	name: "addNewGalleryViewer",
+	// 	desc: "Adds an alternative gallery viewer with Right / Left mouse button navigation.",
+	// 	enabled: "true",
+	// 	options: {
+	// 		"resize": {
+	// 			"id" : "enResize",
+	// 			"name": "Enable Resize",
+	// 			"desc": "Automatically resize images based on screen size",
+	// 			"enabled": true
+	// 		},
+	// 		"overlay": {
+	// 			"id" : "enOverlay",
+	// 			"name": "Enable Overlay",
+	// 			"desc": "Enable the image overlay that displays next / previous / <3",
+	// 			"enabled": true
+	// 		},
+	// 		"replacePopup": {
+	// 			"id" : "enReplacePopup",
+	// 			"name": "Replace Popup",
+	// 			"desc": "Replace the default image popup viewer for posts",
+	// 			"enabled": true
+	// 		}
+	// 	}
+	// },
+	// "addRemoveAllToFeed": {
+	// 	name: "addRemoveAllToFeed",
+	// 	desc: "Adds a remove-all button to the feeds page.",
+	// 	enabled: "true"
+	// },
+	// "postButtonsEnhanced": {
+	// 	name: "postButtonsEnhanced",
+	// 	desc: "Makes enhancements to the post/comment buttons.",
+	// 	enabled: "true"
+	// },
+	// "addSubMenus": {
+	// 	name: "addSubMenus",
+	// 	desc: "Adds submenus to the main menus.",
+	// 	enabled: "true"
+	// }
 };
 
 function size(obj) {

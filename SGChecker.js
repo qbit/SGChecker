@@ -45,36 +45,37 @@ var SGChecker = {
 		]
 	},
 
-	success: function( result ) {
+	success: function( result, a, b ) {
+		console.log(result,a,b);
 		LoadAnimation.stop();
 		SGChecker.showLoggedIn();
 
-		if ( result != '0' ) {
-			LoadAnimation.set_count( result );
+		// if ( result != '0' ) {
+		// 	LoadAnimation.set_count( result );
 
-			var msg = 'Message';
+		// 	var msg = 'Message';
 
-			if ( localStorage.comments ) {
-				msg = 'Comment';
-			}
+		// 	if ( localStorage.comments ) {
+		// 		msg = 'Comment';
+		// 	}
 
-			var notif = webkitNotifications.createNotification( 
-				'icon_48.png',
-				'New ' + msg + '!',
-				'Someone has sent you some love!'
-			);
+		// 	var notif = webkitNotifications.createNotification( 
+		// 		'icon_48.png',
+		// 		'New ' + msg + '!',
+		// 		'Someone has sent you some love!'
+		// 	);
 
-			// only show notification if we receive more notifications.. 
-			if ( ! localStorage.prev_result || localStroage.prev_result < parseInt( result, 10 ) ) {
-				localStorage.prev_result = parseInt( result, 10 );
-				notif.show();
-			}
+		// 	// only show notification if we receive more notifications.. 
+		// 	if ( ! localStorage.prev_result || localStroage.prev_result < parseInt( result, 10 ) ) {
+		// 		localStorage.prev_result = parseInt( result, 10 );
+		// 		notif.show();
+		// 	}
 
-		} else {
+		// } else {
 			LoadAnimation.set_count( );
 			console.log( "deleting previous result" );
 			delete localStorage.prev_result;
-		}
+		// }
 
 		SGChecker.schedule();
 
@@ -124,13 +125,13 @@ var SGChecker = {
 		return gets;
 	},
 
-	sg_url: "http://suicidegirls.com/xml/user/getInfo/",
+	sg_url: "https://suicidegirls.com/",
 
 	sg_pref_urls: {
-		main_page: "http://suicidegirls.com/",
-		mysg: "http://suicidegirls.com/my/",
-		messages: "http://suicidegirls.com/my/messages/",
-		groups: "http://suicidegirls.com/groups/"
+		main_page: "https://suicidegirls.com/",
+		mysg: "https://suicidegirls.com/my/",
+		messages: "https://suicidegirls.com/my/messages/",
+		groups: "https://suicidegirls.com/groups/"
 	},
 
 	showLoggedOut: function() {
@@ -232,7 +233,10 @@ var SGChecker = {
 
 				radio_div.appendChild( radio );
 				radio_div.appendChild( div_text );
-				document.getElementById( config[i].dest_div ).appendChild( radio_div );
+				var ele = document.getElementById( config[i].dest_div );
+				if ( ele ) {
+					ele.appendChild( radio_div );
+				}
 			}
 		}
 	},

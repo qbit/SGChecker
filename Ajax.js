@@ -13,7 +13,7 @@ var Ajax = {
 		Ajax.making_request = 0;
 		window.clearTimeout( Ajax.abortId );
 		if ( Ajax.debug ) {
-			console.log( reason );
+			console.log( reason, oe );
 		}
 		if ( oe ) {
 			oe( reason );
@@ -52,51 +52,10 @@ var Ajax = {
 				var mod = this.module_name;
 				if (A.readyState === 4) {
 					if (A.status === 200) {
-						if ( A.responseXML ) {
+						var xml = A.responseXML;
+						
 
-							var xml = A.responseXML;
-							
-							var obj = SGChecker.gets();
-							//var obj = eval( ''+Ajax.module_name+'.gets()' );
-							/*
-							 * fun little session in getting multiple xpath stuff.
-							 * it's too dificult to display multiple results 
-							 * in a little tiny badge
-							var s = [];
-							var n = [];
-							var r = [];
-							for ( var i = 0; i < obj.length; i++ ) {
-								s[i] = xml.evaluate( obj[i], xml, null, XPathResult.ANY_TYPE, null );
-								if ( s[i] ) {
-									n[i] = s[i].iterateNext();
-									if ( n[i] && n[i].textContent ) {
-										r.push( n[i].textContent );
-									}
-								} else {
-									break;
-								}
-							}
-
-							delete s;
-							delete n;
-
-							if ( r.length > 0 ) {
-								Ajax.onSuccess( on_complete, r );
-							} else {
-								Ajax.onError( on_error, 'NotLoggedIn' );
-							}
-							*/
-
-							var CountSet = xml.evaluate( obj[0], xml, null, XPathResult.ANY_TYPE, null );
-
-							var CountNode = CountSet.iterateNext( );
-
-							if ( CountNode ) {
-								Ajax.onSuccess( on_complete, CountNode.textContent );
-							} else {
-								Ajax.onError( on_error, 'NotLoggedIn' );
-							}
-						}
+						Ajax.onSuccess( on_complete, null );
 					} else { 
 						Ajax.onError( on_error, A.status );
 					}   
