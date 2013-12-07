@@ -129,8 +129,8 @@ var SGChecker = {
 
 	sg_pref_urls: {
 		main_page: "https://suicidegirls.com/",
-		mysg: "https://suicidegirls.com/my/",
-		messages: "https://suicidegirls.com/my/messages/",
+		mysg: "https://suicidegirls.com/home/",
+		messages: "https://suicidegirls.com/messages/",
 		groups: "https://suicidegirls.com/groups/"
 	},
 
