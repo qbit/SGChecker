@@ -7,11 +7,11 @@ var p, plugins = {
 	// 	desc: "Adds girl name / album name to the alt tag of an image for easy set identification from group posts, boards.",
 	// 	enabled: "true"
 	// },
-	// "addSetDownloadLink": {
-	// 	name: "addSetDownloadLink",
-	// 	desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram.",
-	// 	enabled: "false"
-	// },
+	"addSetDownloadLink": {
+		name: "addSetDownloadLink",
+		desc: "Adds a download link for a given image set. <b>WARNING!</b> This can use HUGE amounts of ram. - <b>This plugin can't be disabled</b>",
+		enabled: "false"
+	},
 	"loadMyGroups": {
 		name: "loadMyGroups",
 		desc: "Make clicking 'GROUPS' always load 'MY GROUPS' instead of 'PUBLIC GROUPS",
@@ -136,6 +136,7 @@ function set_opt( helper, options ) {
 function inject( file ) {
 	var s = document.createElement('script');
 	s.src = chrome.extension.getURL(file);
+	console.log('injecting %s', file);
 	(document.head||document.documentElement).appendChild(s);
 }
 
@@ -199,7 +200,7 @@ function check( plugin ) {
   });
 }
 
-inject('Gallery.js');
+// inject('Gallery.js');
 // inject('jszip.js');
 
 for ( p in plugins ) {
